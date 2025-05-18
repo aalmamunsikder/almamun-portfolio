@@ -10,6 +10,7 @@ export const mockPortfolioData: PortfolioData = {
     resumeUrl: "https://example.com/resume.pdf",
     contactInfo: {
       email: "almamun.sikder@example.com",
+      phone: "+8801234567890",
       location: "Dhaka, Bangladesh",
       availableForWork: true
     },
@@ -35,7 +36,7 @@ export const mockPortfolioData: PortfolioData = {
       {
         id: "sl4",
         platform: "WhatsApp",
-        url: "https://wa.me/+8801234567890",
+        url: "https://wa.me/8801234567890",
         icon: "whatsapp"
       }
     ]
@@ -73,198 +74,47 @@ export const mockPortfolioData: PortfolioData = {
     }
   ],
   skills: [
-    // Frontend Development
     {
       id: "s1",
-      name: "React.js",
+      name: "React",
       icon: "react",
       level: 90,
       category: "Frontend"
     },
     {
       id: "s2",
-      name: "Next.js",
-      icon: "nextjs",
+      name: "Node.js",
+      icon: "nodejs",
       level: 85,
-      category: "Frontend"
+      category: "Backend"
     },
     {
       id: "s3",
       name: "TypeScript",
       icon: "typescript",
-      level: 88,
-      category: "Frontend"
+      level: 80,
+      category: "Language"
     },
     {
       id: "s4",
-      name: "Tailwind CSS",
-      icon: "tailwind",
-      level: 90,
-      category: "Frontend"
+      name: "MongoDB",
+      icon: "mongodb",
+      level: 75,
+      category: "Database"
     },
     {
       id: "s5",
-      name: "Redux",
-      icon: "redux",
-      level: 85,
-      category: "Frontend"
+      name: "GraphQL",
+      icon: "graphql",
+      level: 70,
+      category: "API"
     },
     {
       id: "s6",
-      name: "HTML5/CSS3",
-      icon: "html",
-      level: 95,
-      category: "Frontend"
-    },
-
-    // Backend Development
-    {
-      id: "s7",
-      name: "Node.js",
-      icon: "nodejs",
-      level: 88,
-      category: "Backend"
-    },
-    {
-      id: "s8",
-      name: "Express.js",
-      icon: "express",
-      level: 85,
-      category: "Backend"
-    },
-    {
-      id: "s9",
-      name: "Python",
-      icon: "python",
-      level: 80,
-      category: "Backend"
-    },
-    {
-      id: "s10",
-      name: "Django",
-      icon: "django",
-      level: 75,
-      category: "Backend"
-    },
-    {
-      id: "s11",
-      name: "RESTful APIs",
-      icon: "api",
-      level: 90,
-      category: "Backend"
-    },
-    {
-      id: "s12",
-      name: "GraphQL",
-      icon: "graphql",
-      level: 82,
-      category: "Backend"
-    },
-
-    // Database
-    {
-      id: "s13",
-      name: "MongoDB",
-      icon: "mongodb",
-      level: 85,
-      category: "Database"
-    },
-    {
-      id: "s14",
-      name: "PostgreSQL",
-      icon: "postgresql",
-      level: 80,
-      category: "Database"
-    },
-    {
-      id: "s15",
-      name: "Redis",
-      icon: "redis",
-      level: 75,
-      category: "Database"
-    },
-    {
-      id: "s16",
-      name: "MySQL",
-      icon: "mysql",
-      level: 82,
-      category: "Database"
-    },
-
-    // DevOps & Tools
-    {
-      id: "s17",
       name: "Docker",
       icon: "docker",
-      level: 80,
+      level: 65,
       category: "DevOps"
-    },
-    {
-      id: "s18",
-      name: "Git",
-      icon: "git",
-      level: 90,
-      category: "DevOps"
-    },
-    {
-      id: "s19",
-      name: "AWS",
-      icon: "aws",
-      level: 75,
-      category: "DevOps"
-    },
-    {
-      id: "s20",
-      name: "CI/CD",
-      icon: "cicd",
-      level: 78,
-      category: "DevOps"
-    },
-
-    // Testing
-    {
-      id: "s21",
-      name: "Jest",
-      icon: "jest",
-      level: 85,
-      category: "Testing"
-    },
-    {
-      id: "s22",
-      name: "React Testing Library",
-      icon: "testing",
-      level: 82,
-      category: "Testing"
-    },
-    {
-      id: "s23",
-      name: "Cypress",
-      icon: "cypress",
-      level: 78,
-      category: "Testing"
-    },
-
-    // Design Tools
-    {
-      id: "s24",
-      name: "Figma",
-      icon: "figma",
-      level: 85,
-      category: "Design"
-    },
-    {
-      id: "s25",
-      name: "Adobe XD",
-      icon: "xd",
-      level: 80,
-      category: "Design"
-    },
-    {
-      id: "s26",
-      name: "UI/UX Design",
-      icon: "design",
-      level: 85,
-      category: "Design"
     }
   ],
   experiences: [

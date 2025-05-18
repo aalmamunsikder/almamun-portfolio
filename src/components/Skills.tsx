@@ -99,18 +99,18 @@ const Skills = () => {
         </div>
         
         {/* Section header with glass effect */}
-        <div className="relative mb-24">
+        <div className="relative mb-12 sm:mb-24">
           <div className="absolute inset-0 bg-gradient-to-r from-theme-purple/10 to-blue-500/10 rounded-3xl blur-3xl -z-10"></div>
-          <div className="glass-morphism rounded-3xl p-12 text-center border border-white/10">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-theme-purple/20 rounded-2xl mb-8">
-              <span className="text-3xl">🚀</span>
+          <div className="glass-morphism rounded-3xl p-6 sm:p-8 md:p-12 text-center border border-white/10">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-theme-purple/20 rounded-2xl mb-6 sm:mb-8">
+              <span className="text-2xl sm:text-3xl">🚀</span>
             </div>
             
-            <h2 className="text-5xl md:text-6xl font-tech mb-6 text-gradient">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-tech mb-4 sm:mb-6 text-gradient">
               Technical Expertise
           </h2>
             
-            <p className="text-xl md:text-2xl text-white/70 max-w-3xl mx-auto font-tech">
+            <p className="text-base sm:text-xl md:text-2xl text-white/70 max-w-3xl mx-auto font-tech">
               {portfolioData.personalInfo.title ? `${portfolioData.personalInfo.title} with a passion for excellence` : "A developer with a passion for creating seamless digital experiences"}
           </p>
           </div>
@@ -118,37 +118,35 @@ const Skills = () => {
 
         {/* No skills placeholder */}
         {portfolioData.skills.length === 0 ? (
-          <div className="glass-morphism border border-white/10 rounded-3xl p-12 text-center mb-24">
-            <h3 className="text-3xl font-tech text-white mb-4">
+          <div className="glass-morphism border border-white/10 rounded-3xl p-6 sm:p-12 text-center mb-12 sm:mb-24">
+            <h3 className="text-2xl sm:text-3xl font-tech text-white mb-4">
               No Skills Added
             </h3>
-            <p className="text-white/70 text-lg font-tech">
+            <p className="text-white/70 text-base sm:text-lg font-tech">
               No skills added yet.
             </p>
           </div>
         ) : (
           <>
-            {/* Category filter - Make it scrollable on mobile */}
-            <div className="overflow-x-auto pb-4 mb-12">
-              <div className="flex flex-nowrap justify-start md:justify-center gap-3 min-w-max px-4">
-                {categories.map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => setActiveFilter(category)}
-                    className={`px-5 py-2 rounded-full font-tech text-sm whitespace-nowrap transition-all duration-300 ${
-                      activeFilter === category
-                        ? "bg-gradient-to-r from-theme-purple to-blue-500 text-white"
-                        : "bg-white/5 backdrop-blur-md border border-white/10 text-white/70 hover:text-white hover:bg-white/10"
-                    }`}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
+            {/* Category filter */}
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-12">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setActiveFilter(category)}
+                  className={`px-3 sm:px-5 py-1.5 sm:py-2 rounded-full font-tech text-xs sm:text-sm transition-all duration-300 ${
+                    activeFilter === category
+                      ? "bg-gradient-to-r from-theme-purple to-blue-500 text-white"
+                      : "bg-white/5 backdrop-blur-md border border-white/10 text-white/70 hover:text-white hover:bg-white/10"
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
             </div>
             
-            {/* Skills cards in a responsive grid layout */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+            {/* Skills cards in a modern layout */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 mb-12 sm:mb-24">
               {categoryLevels.map((skill, index) => (
                 <div 
                   key={skill.category}
@@ -158,7 +156,7 @@ const Skills = () => {
                   {/* Background glow effect */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${skill.color} rounded-2xl blur-xl opacity-60 group-hover:opacity-100 transition-opacity duration-300 -z-10`}></div>
                   
-                  <div className="glass-morphism h-full rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/10 overflow-hidden relative">
+                  <div className="glass-morphism h-full rounded-2xl p-5 sm:p-8 border border-white/10 overflow-hidden relative">
                     {/* Geometric background pattern */}
                     <div className="absolute -right-8 -bottom-8 opacity-10">
                       <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -169,13 +167,13 @@ const Skills = () => {
                       </svg>
                     </div>
                     
-                    <div className="flex items-start gap-4 sm:gap-6 mb-6">
-                      <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
+                    <div className="flex items-start gap-4 sm:gap-6 mb-6 sm:mb-8">
+                      <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
                         {skill.icon}
                       </div>
                       
-                      <div className="flex-grow min-w-0">
-                        <h3 className="text-xl sm:text-2xl md:text-3xl font-tech mb-2 truncate">{skill.category}</h3>
+                      <div>
+                        <h3 className="text-xl sm:text-2xl md:text-3xl font-tech mb-2">{skill.category}</h3>
                         <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden mt-2">
                           <div 
                             className={`h-full rounded-full bg-gradient-to-r ${getLevelColor(skill.level)}`}
@@ -191,9 +189,9 @@ const Skills = () => {
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
                       {skill.items.map((item) => (
-                        <div key={item} className="flex items-center py-2 group/item">
-                          <div className="w-1.5 h-1.5 rounded-full bg-theme-purple mr-3 group-hover/item:scale-125 transition-transform"></div>
-                          <p className="text-white/80 font-tech text-base sm:text-lg truncate group-hover/item:text-white transition-colors">{item}</p>
+                        <div key={item} className="flex items-center py-1.5 sm:py-2 group/item">
+                          <div className="w-1.5 h-1.5 rounded-full bg-theme-purple mr-2 sm:mr-3 group-hover/item:scale-125 transition-transform"></div>
+                          <p className="text-white/80 font-tech text-sm sm:text-base md:text-lg group-hover/item:text-white transition-colors">{item}</p>
                         </div>
                       ))}
                     </div>
@@ -204,9 +202,9 @@ const Skills = () => {
           </>
         )}
           
-        {/* Experience section - Make it responsive */}
+        {/* Experience section */}
         {portfolioData.experiences.length > 0 && (
-          <div className="relative animate-fade-in mt-16 sm:mt-24" style={{ animationDelay: "0.7s" }}>
+          <div className="relative animate-fade-in" style={{ animationDelay: "0.7s" }}>
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-theme-purple/10 rounded-3xl blur-3xl -z-10"></div>
             <div className="glass-morphism rounded-3xl p-6 sm:p-8 md:p-12 border border-white/10">
               <h3 className="text-2xl sm:text-3xl font-tech mb-8 sm:mb-12 text-center">Professional Journey</h3>
@@ -219,13 +217,13 @@ const Skills = () => {
                 {portfolioData.experiences.slice(0, 4).map((exp, index) => (
                   <div key={exp.id} className="ml-6 sm:ml-8 md:ml-12 mb-8 sm:mb-12 last:mb-0 relative">
                     {/* Timeline node */}
-                    <div className="absolute -left-[24px] sm:-left-[32px] top-0 w-4 sm:w-6 h-4 sm:h-6 rounded-full bg-gradient-to-r from-theme-purple to-blue-400 flex items-center justify-center">
-                      <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-white"></div>
+                    <div className="absolute -left-[28px] sm:-left-[52px] top-0 w-4 h-4 sm:w-6 sm:h-6 rounded-full bg-gradient-to-r from-theme-purple to-blue-400 flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white"></div>
                     </div>
                     
                     <div className="p-4 sm:p-6 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 mb-3">
-                        <span className="text-theme-purple font-tech text-lg sm:text-xl">
+                      <div className="flex flex-col md:flex-row md:items-center gap-1 sm:gap-2 md:gap-6 mb-2 sm:mb-3">
+                        <span className="text-theme-purple font-tech text-base sm:text-xl">
                           {exp.startDate}{exp.endDate ? ` - ${exp.endDate}` : " - Present"}
                         </span>
                         <h4 className="text-white font-tech text-lg sm:text-xl">{exp.jobTitle}</h4>
@@ -236,7 +234,7 @@ const Skills = () => {
                 ))}
               </div>
             </div>
-          </div>
+        </div>
         )}
       </div>
     </section>

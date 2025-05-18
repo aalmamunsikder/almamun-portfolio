@@ -69,28 +69,28 @@ const Hero = () => {
         {/* Main hero content with glass card */}
         <div className="relative mb-16">
           <div className="absolute inset-0 bg-gradient-to-r from-theme-purple/10 to-blue-500/10 rounded-3xl blur-3xl -z-10"></div>
-          <div className="glass-morphism rounded-3xl p-12 md:p-16 text-center border border-white/10">
-            <div className="inline-block bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-5 py-2 mb-8 animate-fade-in">
-              <span className="text-theme-purple font-bold">✦</span> <span className="text-white/80 font-tech tracking-wide">{personalInfo.title.toUpperCase()}</span>
+          <div className="glass-morphism rounded-3xl p-6 sm:p-8 md:p-12 lg:p-16 text-center border border-white/10">
+            <div className="inline-block bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-4 py-1.5 sm:px-5 sm:py-2 mb-4 sm:mb-8 animate-fade-in">
+              <span className="text-theme-purple font-bold">✦</span> <span className="text-white/80 font-tech tracking-wide text-xs sm:text-sm">{personalInfo.title.toUpperCase()}</span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-tech leading-none mb-8 animate-fade-in" style={{ animationDelay: "0.1s" }}>
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-tech leading-none mb-6 sm:mb-8 animate-fade-in" style={{ animationDelay: "0.1s" }}>
               <span className="text-white block mb-2">{personalInfo.name}</span>
               <span className="text-gradient">{personalInfo.tagline}</span>
             </h1>
             
-            <p className="text-white/70 text-xl md:text-2xl max-w-3xl mx-auto animate-fade-in font-tech" style={{ animationDelay: "0.2s" }}>
+            <p className="text-white/70 text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto animate-fade-in font-tech" style={{ animationDelay: "0.2s" }}>
               {personalInfo.bio.split('.')[0]}
             </p>
             
-            <div className="flex flex-wrap justify-center gap-4 mt-12 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mt-8 sm:mt-12 animate-fade-in" style={{ animationDelay: "0.3s" }}>
               <Button 
                 asChild 
                 size="lg" 
-                className="bg-gradient-to-r from-theme-purple to-blue-500 hover:from-theme-purple/90 hover:to-blue-500/90 text-white rounded-xl px-8 py-6 text-lg font-tech"
+                className="bg-gradient-to-r from-theme-purple to-blue-500 hover:from-theme-purple/90 hover:to-blue-500/90 text-white rounded-xl px-4 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-tech"
               >
                 <a href="#projects" className="flex items-center gap-2">
-                  <BriefcaseBusiness className="h-5 w-5" />
+                  <BriefcaseBusiness className="h-4 w-4 sm:h-5 sm:w-5" />
                   View My Work
                 </a>
               </Button>
@@ -98,17 +98,17 @@ const Hero = () => {
                 asChild 
                 variant="outline" 
                 size="lg" 
-                className="bg-white/5 backdrop-blur-sm border-white/10 hover:bg-white/10 text-white px-8 py-6 rounded-xl text-lg font-tech"
+                className="bg-white/5 backdrop-blur-sm border-white/10 hover:bg-white/10 text-white px-4 sm:px-8 py-5 sm:py-6 rounded-xl text-base sm:text-lg font-tech"
               >
                 <a href="#contact" className="flex items-center gap-2">
-                  <ChevronRight className="h-5 w-5" />
+                  <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
                   Get in Touch
                 </a>
               </Button>
             </div>
 
             {/* Stats section */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mt-10 sm:mt-16 animate-fade-in" style={{ animationDelay: "0.4s" }}>
               {[
                 { number: `${Math.round(portfolioData.experiences.reduce((acc, exp) => {
                   const startDate = new Date(exp.startDate);
@@ -119,9 +119,9 @@ const Hero = () => {
                 { number: "20+", label: "Happy Clients" },
                 { number: "100%", label: "Client Satisfaction" }
               ].map((stat, index) => (
-                <div key={index} className="p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300">
-                  <p className="text-3xl md:text-4xl font-tech text-gradient font-bold">{stat.number}</p>
-                  <p className="text-white/70 font-tech">{stat.label}</p>
+                <div key={index} className="p-3 sm:p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300">
+                  <p className="text-2xl sm:text-3xl md:text-4xl font-tech text-gradient font-bold">{stat.number}</p>
+                  <p className="text-white/70 font-tech text-xs sm:text-sm md:text-base">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -129,7 +129,7 @@ const Hero = () => {
           </div>
 
         {/* Social links */}
-        <div className="flex justify-center gap-6 items-center animate-fade-in" style={{ animationDelay: "0.5s" }}>
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-6 items-center animate-fade-in my-8 sm:my-0" style={{ animationDelay: "0.5s" }}>
           {personalInfo.socialLinks.map((link) => (
             <a 
               key={link.id}
@@ -138,22 +138,22 @@ const Hero = () => {
               rel="noopener noreferrer" 
               className="group"
             >
-              <div className="p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-theme-purple/20 transition-all duration-300">
+              <div className="p-2 sm:p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-theme-purple/20 transition-all duration-300">
                 {getSocialIcon(link.platform)}
               </div>
             </a>
           ))}
-          <div className="h-10 border-l border-white/10 mx-4"></div>
-          <div className="py-2 px-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
-            <span className="text-white font-tech">{personalInfo.contactInfo.availableForWork ? "Available for work" : "Currently Busy"}</span>
+          <div className="hidden sm:block h-10 border-l border-white/10 mx-2 sm:mx-4"></div>
+          <div className="py-1.5 sm:py-2 px-3 sm:px-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+            <span className="text-white font-tech text-xs sm:text-sm">{personalInfo.contactInfo.availableForWork ? "Available for work" : "Currently Busy"}</span>
           </div>
         </div>
         
-        <div className="flex justify-center mt-20 animate-fade-in" style={{ animationDelay: "0.6s" }}>
+        <div className="flex justify-center mt-8 sm:mt-20 animate-fade-in" style={{ animationDelay: "0.6s" }}>
           <a href="#skills" className="flex flex-col items-center group">
-            <span className="text-white/50 mb-2 font-tech group-hover:text-white transition-colors">Scroll Down</span>
+            <span className="text-white/50 mb-2 font-tech text-sm group-hover:text-white transition-colors">Scroll Down</span>
             <div className="p-2 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 group-hover:bg-theme-purple/20 transition-all duration-300">
-              <ArrowDown className="w-5 h-5 text-white animate-bounce" />
+              <ArrowDown className="w-4 h-4 sm:w-5 sm:h-5 text-white animate-bounce" />
             </div>
           </a>
         </div>

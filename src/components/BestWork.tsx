@@ -17,14 +17,14 @@ const BestWork = () => {
   // If no projects are available, show a placeholder
   if (!projectToDisplay) {
     return (
-      <section id="bestwork" className="relative bg-background py-12 sm:py-24 overflow-hidden">
-        <div className="container max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
-          <div className="glass-morphism border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-12 text-center">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-tech text-white mb-4">
+      <section id="bestwork" className="relative bg-background py-24 overflow-hidden">
+        <div className="container max-w-7xl mx-auto px-6 md:px-12">
+          <div className="glass-morphism border border-white/10 rounded-3xl p-12 text-center">
+            <h2 className="text-3xl md:text-4xl font-tech text-white mb-4">
               No Projects Available
             </h2>
-            <p className="text-white/70 text-base sm:text-lg font-tech mb-8">
-              Add projects to showcase your best work here.
+            <p className="text-white/70 text-lg font-tech mb-8">
+              Add projects in the admin panel to showcase your best work here.
             </p>
           </div>
         </div>
@@ -33,7 +33,7 @@ const BestWork = () => {
   }
   
   return (
-    <section id="bestwork" className="relative bg-background py-12 sm:py-24 overflow-hidden">
+    <section id="bestwork" className="relative bg-background py-24 overflow-hidden">
       {/* Grid pattern background */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAyMCAwIEwgMCAwIDAgMjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLW9wYWNpdHk9IjAuMSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-20 pointer-events-none"></div>
       
@@ -51,13 +51,13 @@ const BestWork = () => {
         </svg>
       </div>
       
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
-        <div className="glass-morphism border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-12 relative overflow-hidden">
+      <div className="container max-w-7xl mx-auto px-6 md:px-12">
+        <div className="glass-morphism border border-white/10 rounded-3xl p-5 sm:p-6 md:p-12 relative overflow-hidden">
           {/* Content with glass effect */}
-          <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-16 relative z-10">
+          <div className="flex flex-col lg:flex-row gap-6 sm:gap-10 lg:gap-16 relative z-10">
             {/* Image section */}
             <div className="lg:w-1/2 relative">
-              <div className="aspect-video overflow-hidden rounded-lg sm:rounded-xl border border-white/10 shadow-xl">
+              <div className="aspect-video overflow-hidden rounded-xl border border-white/10 shadow-xl">
                 <img 
                   src={projectToDisplay.imageUrl} 
                   alt={projectToDisplay.title} 
@@ -68,17 +68,17 @@ const BestWork = () => {
                 />
                 
                 {/* Tags overlay */}
-                <div className="absolute top-2 sm:top-4 left-2 sm:left-4 flex flex-wrap gap-1.5 sm:gap-2">
+                <div className="absolute top-2 sm:top-4 left-2 sm:left-4 flex flex-wrap gap-1 sm:gap-2">
                   {projectToDisplay.tags.slice(0, 3).map((tag, index) => (
                     <span 
                       key={index} 
-                      className="py-1 px-2 sm:px-3 text-xs rounded-full bg-theme-purple/30 backdrop-blur-sm border border-theme-purple/30 font-tech text-white"
+                      className="py-1 px-2 sm:px-3 text-[10px] sm:text-xs rounded-full bg-theme-purple/30 backdrop-blur-sm border border-theme-purple/30 font-tech text-white"
                     >
                       {tag}
                     </span>
                   ))}
                   {projectToDisplay.tags.length > 3 && (
-                    <span className="py-1 px-2 sm:px-3 text-xs rounded-full bg-white/10 backdrop-blur-sm border border-white/10 font-tech text-white">
+                    <span className="py-1 px-2 sm:px-3 text-[10px] sm:text-xs rounded-full bg-white/10 backdrop-blur-sm border border-white/10 font-tech text-white">
                       +{projectToDisplay.tags.length - 3}
                     </span>
                   )}
@@ -88,11 +88,11 @@ const BestWork = () => {
             
             {/* Text content */}
             <div className="lg:w-1/2 flex flex-col justify-center">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-tech text-white mb-4 sm:mb-6">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-tech text-white mb-4 sm:mb-6">
                 {projectToDisplay.title}
               </h2>
               
-              <p className="text-white/70 text-base sm:text-lg md:text-xl font-tech mb-6 sm:mb-8">
+              <p className="text-base sm:text-lg md:text-xl font-tech text-white/70 mb-6 sm:mb-8">
                 {projectToDisplay.description}
               </p>
               
@@ -100,7 +100,7 @@ const BestWork = () => {
                 {projectToDisplay.liveUrl && (
                   <Button 
                     asChild 
-                    className="bg-gradient-to-r from-theme-purple to-blue-500 hover:from-theme-purple/90 hover:to-blue-500/90 text-white px-4 sm:px-6 py-2 sm:py-6 rounded-lg sm:rounded-xl text-sm sm:text-lg font-tech"
+                    className="bg-gradient-to-r from-theme-purple to-blue-500 hover:from-theme-purple/90 hover:to-blue-500/90 text-white px-4 sm:px-6 py-2 sm:py-6 rounded-xl text-sm sm:text-lg font-tech"
                   >
                     <a 
                       href={projectToDisplay.liveUrl} 
@@ -118,7 +118,7 @@ const BestWork = () => {
                   <Button 
                     asChild 
                     variant="outline" 
-                    className="bg-white/5 hover:bg-white/10 border-white/10 text-white px-4 sm:px-6 py-2 sm:py-6 rounded-lg sm:rounded-xl text-sm sm:text-lg font-tech"
+                    className="bg-white/5 hover:bg-white/10 border-white/10 text-white px-4 sm:px-6 py-2 sm:py-6 rounded-xl text-sm sm:text-lg font-tech"
                   >
                     <a 
                       href={projectToDisplay.githubUrl} 
@@ -135,7 +135,7 @@ const BestWork = () => {
               
               <a 
                 href="#projects" 
-                className="mt-6 sm:mt-8 inline-flex items-center text-white/70 hover:text-white transition-colors text-base sm:text-lg font-tech"
+                className="mt-6 sm:mt-8 inline-flex items-center text-white/70 hover:text-white transition-colors text-sm sm:text-lg font-tech"
               >
                 View all projects 
                 <ChevronRight className="ml-1 h-4 w-4 sm:h-5 sm:w-5" />
