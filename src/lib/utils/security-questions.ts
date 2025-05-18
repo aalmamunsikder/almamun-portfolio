@@ -1,12 +1,4 @@
-export interface SecurityQuestion {
-  id: string;
-  question: string;
-}
-
-export interface SecurityAnswer {
-  questionId: string;
-  answer: string;
-}
+import { SecurityQuestion, SecurityAnswer } from '@/types/auth';
 
 export const SECURITY_QUESTIONS: SecurityQuestion[] = [
   { id: 'birth', question: 'What city were you born in?' },
@@ -20,6 +12,27 @@ export const SECURITY_QUESTIONS: SecurityQuestion[] = [
   { id: 'movie', question: 'What was the first movie you saw in a theater?' },
   { id: 'street', question: 'What street did you grow up on?' }
 ];
+
+// Default security questions and answers for development/testing
+const DEFAULT_SECURITY_QUESTIONS = {
+  questions: ['birth', 'pet', 'school'],
+  answers: [
+    { questionId: 'birth', answer: btoa('dhaka'.toLowerCase().trim()) },
+    { questionId: 'pet', answer: btoa('tommy'.toLowerCase().trim()) },
+    { questionId: 'school', answer: btoa('abc school'.toLowerCase().trim()) }
+  ]
+};
+
+export const initializeSecurityQuestions = (): void => {
+  try {
+    const existingData = localStorage.getItem('securityQuestions');
+    if (!existingData) {
+      localStorage.setItem('securityQuestions', JSON.stringify(DEFAULT_SECURITY_QUESTIONS));
+    }
+  } catch (error) {
+    console.error('Failed to initialize security questions:', error);
+  }
+};
 
 export const saveSecurityQuestions = (selectedQuestions: string[], answers: SecurityAnswer[]): void => {
   try {

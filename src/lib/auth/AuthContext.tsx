@@ -7,6 +7,7 @@ import {
   terminateSession,
   SESSION_TIMEOUT 
 } from '@/lib/utils/security';
+import { initializeSecurityQuestions } from '@/lib/utils/security-questions';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -40,6 +41,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const attempts = localStorage.getItem('loginAttempts');
     const locked = localStorage.getItem('lockedUntil');
     const sessionId = localStorage.getItem('currentSessionId');
+
+    // Initialize security questions
+    initializeSecurityQuestions();
 
     if (token && sessionId) {
       const loginTime = lastLogin ? new Date(lastLogin) : null;
