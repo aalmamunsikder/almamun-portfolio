@@ -56,7 +56,7 @@ const Dashboard = () => {
   // Get featured projects
   const featuredProjects = portfolioData.projects
     .filter(project => project.featured)
-    .slice(0, 3);
+    .slice(0, 5);
   
   // Handle reset confirmation
   const handleReset = () => {

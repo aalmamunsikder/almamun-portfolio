@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Github, FolderGit2, Code2, Eye, ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
+import { ExternalLink, Github, FolderGit2, Code2, Eye, ChevronLeft, ChevronRight, ArrowUpRight, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePortfolio } from "@/lib/context/PortfolioContext";
 
@@ -9,7 +9,9 @@ const Projects = () => {
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [hoveredProject, setHoveredProject] = useState<string | null>(null);
   const filtersRef = useRef<HTMLDivElement>(null);
-
+  // Add state for pagination/load more
+  const [projectsToShow, setProjectsToShow] = useState<number>(6);
+  
   // Get unique tags from all projects
   const uniqueTags = Array.from(
     new Set(portfolioData.projects.flatMap(project => project.tags))
@@ -21,6 +23,20 @@ const Projects = () => {
   const filteredProjects = activeFilter === "all" 
     ? portfolioData.projects 
     : portfolioData.projects.filter(project => project.tags.includes(activeFilter));
+    
+  // Display limited number of projects initially
+  const visibleProjects = filteredProjects.slice(0, projectsToShow);
+  const hasMoreProjects = filteredProjects.length > projectsToShow;
+  
+  // Load more projects
+  const loadMoreProjects = () => {
+    setProjectsToShow(prev => prev + 6);
+  };
+  
+  // Reset project count when filter changes
+  useEffect(() => {
+    setProjectsToShow(6);
+  }, [activeFilter]);
     
   // Scroll filters horizontally
   const scrollFilters = (direction: 'left' | 'right') => {
@@ -134,147 +150,156 @@ const Projects = () => {
           </div>
         </div>
 
-        {/* Projects grid with advanced hover effects */}
-        {filteredProjects.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-8">
-            {filteredProjects.map((project, index) => (
-              <div 
-                key={project.id} 
-                className="group relative"
-                onMouseEnter={() => setHoveredProject(project.id)}
-                onMouseLeave={() => setHoveredProject(null)}
-                style={{ 
-                  animationDelay: `${0.2 + 0.1 * index}s`,
-                  transform: `scale(${hoveredProject === project.id ? 1.02 : 1})`,
-                  transition: 'transform 0.3s ease-out'
-                }}
-              >
-                {/* Enhanced glow effect */}
-                <div className={`absolute inset-0 bg-gradient-to-br from-theme-purple/20 to-blue-500/20 rounded-2xl blur-xl transition-all duration-500 -z-10 ${
-                  hoveredProject === project.id ? 'opacity-100 scale-105' : 'opacity-60'
-                }`}></div>
-                
-                <div className="glass-morphism rounded-2xl border border-white/10 h-full overflow-hidden transition-all duration-500 group-hover:shadow-xl group-hover:shadow-theme-purple/20 group-hover:border-white/20">
-                  {/* Image container with improved overlay */}
-                  <div className="relative aspect-[16/9] overflow-hidden">
-                    <img 
-                      src={project.imageUrl} 
-                      alt={project.title} 
-                      className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = "https://placehold.co/600x400?text=No+Image";
-                      }}
-                    />
-                    
-                    {/* Featured badge */}
-                    {project.featured && (
-                      <div className="absolute top-2 sm:top-4 left-2 sm:left-4 py-1 px-2 sm:px-3 rounded-full bg-theme-purple/70 backdrop-blur-md text-[10px] sm:text-xs font-tech text-white/90 border border-theme-purple/30 flex items-center gap-1 z-10">
-                        <span className="h-1 w-1 sm:h-1.5 sm:w-1.5 bg-white rounded-full animate-pulse"></span>
-                        Featured
-                      </div>
-                    )}
-                    
-                    {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent opacity-95 transition-opacity duration-300 group-hover:opacity-90"></div>
-                    
-                    {/* Enhanced preview buttons with labels */}
-                    <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-1 sm:gap-2 z-10">
-                      {project.liveUrl && (
-                        <a 
-                          href={project.liveUrl} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1 sm:gap-2 py-1 px-2 sm:px-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-colors group-hover:opacity-100 opacity-0 transition-opacity duration-300"
-                        >
-                          <Eye className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
-                          <span className="text-[10px] sm:text-xs font-tech">Live Demo</span>
-                        </a>
-                      )}
-                      {project.githubUrl && (
-                        <Button 
-                          asChild 
-                          variant="outline" 
-                          className="rounded-xl bg-white/5 hover:bg-white/10 border-white/10 text-white flex-1 group/button px-2 sm:px-4"
-                        >
-                          <a 
-                            href={project.githubUrl} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-1 sm:gap-2 py-3 sm:py-5"
-                          >
-                            <span className="font-tech text-xs sm:text-sm">View Code</span>
-                            <Github className="h-3 w-3 sm:h-4 sm:w-4" />
-                          </a>
-                        </Button>
-                      )}
-                    </div>
-                    
-                    {/* Title overlay with improved layout */}
-                    <div className="absolute bottom-0 left-0 p-4 sm:p-6 w-full">
-                      <h3 className="text-xl sm:text-2xl font-tech text-white mb-2 group-hover:text-gradient transition-all duration-300 transform group-hover:-translate-y-1">
-                        {project.title}
-                      </h3>
-                      
-                      <div className="flex flex-wrap gap-1 sm:gap-2 mb-3 sm:mb-4">
-                        {project.tags.map((tag, index) => (
-                          <span 
-                            key={`${project.id}-${index}`} 
-                            className="text-[10px] sm:text-xs py-1 px-2 sm:px-3 rounded-full backdrop-blur-md bg-white/10 border border-white/10 font-tech text-white/80"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+        {/* Projects grid with advanced hover effects and better responsive layout */}
+        {visibleProjects.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-8">
+              {visibleProjects.map((project, index) => (
+                <div 
+                  key={project.id} 
+                  className="group relative"
+                  onMouseEnter={() => setHoveredProject(project.id)}
+                  onMouseLeave={() => setHoveredProject(null)}
+                  style={{ 
+                    animationDelay: `${0.2 + 0.1 * index}s`,
+                    transform: `scale(${hoveredProject === project.id ? 1.02 : 1})`,
+                    transition: 'transform 0.3s ease-out'
+                  }}
+                >
+                  {/* Enhanced glow effect */}
+                  <div className={`absolute inset-0 bg-gradient-to-br from-theme-purple/20 to-blue-500/20 rounded-2xl blur-xl transition-all duration-500 -z-10 ${
+                    hoveredProject === project.id ? 'opacity-100 scale-105' : 'opacity-60'
+                  }`}></div>
                   
-                  {/* Description and links with improved layout */}
-                  <div className="p-4 sm:p-6 pt-2">
-                    <p className="text-white/70 text-sm sm:text-base mb-4 sm:mb-6 font-tech line-clamp-3 hover:line-clamp-none transition-all duration-300">
-                      {project.description}
-                    </p>
-                    
-                    <div className="flex gap-2 sm:gap-3">
-                      {project.liveUrl && (
-                        <Button 
-                          asChild 
-                          className="rounded-xl bg-gradient-to-r from-theme-purple/20 to-blue-500/20 hover:from-theme-purple/30 hover:to-blue-500/30 text-white border border-theme-purple/30 flex-1 group/button px-2 sm:px-4"
-                        >
+                  <div className="glass-morphism rounded-2xl border border-white/10 h-full overflow-hidden transition-all duration-500 group-hover:shadow-xl group-hover:shadow-theme-purple/20 group-hover:border-white/20">
+                    {/* Image container with improved overlay */}
+                    <div className="relative aspect-[16/9] overflow-hidden">
+                      <img 
+                        src={project.imageUrl} 
+                        alt={project.title} 
+                        className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = "https://placehold.co/600x400?text=No+Image";
+                        }}
+                      />
+                      
+                      {/* Featured badge */}
+                      {project.featured && (
+                        <div className="absolute top-2 sm:top-4 left-2 sm:left-4 py-1 px-2 sm:px-3 rounded-full bg-theme-purple/70 backdrop-blur-md text-[10px] sm:text-xs font-tech text-white/90 border border-theme-purple/30 flex items-center gap-1 z-10">
+                          <span className="h-1 w-1 sm:h-1.5 sm:w-1.5 bg-white rounded-full animate-pulse"></span>
+                          Featured
+                        </div>
+                      )}
+                      
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent opacity-95 transition-opacity duration-300 group-hover:opacity-90"></div>
+                      
+                      {/* Enhanced preview buttons with labels */}
+                      <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-1 sm:gap-2 z-10">
+                        {project.liveUrl && (
                           <a 
                             href={project.liveUrl} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-1 sm:gap-2 py-3 sm:py-5"
+                            className="flex items-center gap-1 sm:gap-2 py-1 px-2 sm:px-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-colors group-hover:opacity-100 opacity-0 transition-opacity duration-300"
                           >
-                            <span className="font-tech text-xs sm:text-sm">View Live Demo</span>
-                            <ArrowUpRight className="h-3 w-3 sm:h-4 sm:w-4 transition-transform duration-300 group-hover/button:translate-x-1 group-hover/button:-translate-y-1" />
+                            <Eye className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+                            <span className="text-[10px] sm:text-xs font-tech">Live Demo</span>
                           </a>
-                        </Button>
-                      )}
-                      
-                      {project.githubUrl && (
-                        <Button 
-                          asChild 
-                          variant="outline" 
-                          className="rounded-xl bg-white/5 hover:bg-white/10 border-white/10 text-white flex-1 group/button px-2 sm:px-4"
-                        >
+                        )}
+                        {project.githubUrl && (
                           <a 
                             href={project.githubUrl} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-1 sm:gap-2 py-3 sm:py-5"
+                            className="flex items-center gap-1 sm:gap-2 py-1 px-2 sm:px-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-colors group-hover:opacity-100 opacity-0 transition-opacity duration-300"
                           >
-                            <span className="font-tech text-xs sm:text-sm">View Code</span>
-                            <Github className="h-3 w-3 sm:h-4 sm:w-4" />
+                            <Github className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+                            <span className="text-[10px] sm:text-xs font-tech">Code</span>
                           </a>
-                        </Button>
-                      )}
+                        )}
+                      </div>
+                      
+                      {/* Title overlay with improved layout */}
+                      <div className="absolute bottom-0 left-0 p-4 sm:p-6 w-full">
+                        <h3 className="text-xl sm:text-2xl font-tech text-white mb-2 group-hover:text-gradient transition-all duration-300 transform group-hover:-translate-y-1">
+                          {project.title}
+                        </h3>
+                        
+                        <div className="flex flex-wrap gap-1 sm:gap-2 mb-3 sm:mb-4">
+                          {project.tags.map((tag, index) => (
+                            <span 
+                              key={`${project.id}-${index}`} 
+                              className="text-[10px] sm:text-xs py-1 px-2 sm:px-3 rounded-full backdrop-blur-md bg-white/10 border border-white/10 font-tech text-white/80"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Description and links with improved layout */}
+                    <div className="p-4 sm:p-6 pt-2">
+                      <p className="text-white/70 text-xs sm:text-sm md:text-base mb-4 sm:mb-6 font-tech line-clamp-3 hover:line-clamp-none transition-all duration-300">
+                        {project.description}
+                      </p>
+                      
+                      <div className="flex gap-2 sm:gap-3">
+                        {project.liveUrl && (
+                          <Button 
+                            asChild 
+                            className="rounded-xl bg-gradient-to-r from-theme-purple/20 to-blue-500/20 hover:from-theme-purple/30 hover:to-blue-500/30 text-white border border-theme-purple/30 flex-1 group/button px-2 sm:px-4"
+                          >
+                            <a 
+                              href={project.liveUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center gap-1 sm:gap-2 py-2 sm:py-3"
+                            >
+                              <span className="font-tech text-xs sm:text-sm">View Live Demo</span>
+                              <ArrowUpRight className="h-3 w-3 sm:h-4 sm:w-4 transition-transform duration-300 group-hover/button:translate-x-1 group-hover/button:-translate-y-1" />
+                            </a>
+                          </Button>
+                        )}
+                        
+                        {project.githubUrl && (
+                          <Button 
+                            asChild 
+                            variant="outline" 
+                            className="rounded-xl bg-white/5 hover:bg-white/10 border-white/10 text-white flex-1 group/button px-2 sm:px-4"
+                          >
+                            <a 
+                              href={project.githubUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center gap-1 sm:gap-2 py-2 sm:py-3"
+                            >
+                              <span className="font-tech text-xs sm:text-sm">View Code</span>
+                              <Github className="h-3 w-3 sm:h-4 sm:w-4" />
+                            </a>
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
+              ))}
+            </div>
+            
+            {/* Load More button */}
+            {hasMoreProjects && (
+              <div className="flex justify-center mt-12">
+                <Button 
+                  onClick={loadMoreProjects}
+                  className="glass-morphism rounded-xl bg-gradient-to-r from-theme-purple/20 to-blue-500/20 hover:from-theme-purple/30 hover:to-blue-500/30 text-white border border-white/10 px-8 py-6"
+                >
+                  <span className="font-tech text-base mr-2">Load More Projects</span>
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         ) : (
           <div className="glass-morphism border border-white/10 rounded-3xl p-6 sm:p-12 text-center">
             <h3 className="text-2xl sm:text-3xl font-tech text-white mb-4">

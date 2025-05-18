@@ -71,6 +71,76 @@ export const mockPortfolioData: PortfolioData = {
       liveUrl: "https://weather.example.com",
       githubUrl: "https://github.com/alexchen/weather",
       featured: false
+    },
+    {
+      id: "p4",
+      title: "AI Content Generator",
+      description: "An AI-powered platform that generates high-quality content for blogs, social media, and marketing materials.",
+      imageUrl: "https://picsum.photos/800/600?random=4",
+      tags: ["Python", "TensorFlow", "React", "GPT-3"],
+      liveUrl: "https://ai-content.example.com",
+      githubUrl: "https://github.com/alexchen/ai-content",
+      featured: true
+    },
+    {
+      id: "p5",
+      title: "Cryptocurrency Dashboard",
+      description: "Real-time cryptocurrency tracking dashboard with portfolio management and price alerts.",
+      imageUrl: "https://picsum.photos/800/600?random=5",
+      tags: ["Next.js", "WebSockets", "Crypto API", "Tailwind"],
+      liveUrl: "https://crypto-dash.example.com",
+      githubUrl: "https://github.com/alexchen/crypto-dashboard",
+      featured: true
+    },
+    {
+      id: "p6",
+      title: "Virtual Event Platform",
+      description: "A platform for hosting virtual conferences with live streaming, networking rooms, and interactive sessions.",
+      imageUrl: "https://picsum.photos/800/600?random=6",
+      tags: ["React", "WebRTC", "Socket.io", "AWS"],
+      liveUrl: "https://virtual-events.example.com",
+      githubUrl: "https://github.com/alexchen/virtual-events",
+      featured: true
+    },
+    {
+      id: "p7",
+      title: "Health Tracker App",
+      description: "Comprehensive health tracking application with fitness goals, nutrition logging, and progress analytics.",
+      imageUrl: "https://picsum.photos/800/600?random=7",
+      tags: ["React Native", "GraphQL", "AWS Amplify"],
+      liveUrl: "https://health-tracker.example.com",
+      githubUrl: "https://github.com/alexchen/health-tracker",
+      featured: true
+    },
+    {
+      id: "p8",
+      title: "Smart Home Dashboard",
+      description: "IoT dashboard for controlling and monitoring smart home devices with automation rules and energy usage insights.",
+      imageUrl: "https://picsum.photos/800/600?random=8",
+      tags: ["Vue.js", "MQTT", "Node.js", "IoT"],
+      liveUrl: "https://smart-home.example.com",
+      githubUrl: "https://github.com/alexchen/smart-home",
+      featured: true
+    },
+    {
+      id: "p9",
+      title: "Language Learning Platform",
+      description: "Interactive language learning platform with speech recognition, personalized lessons, and progress tracking.",
+      imageUrl: "https://picsum.photos/800/600?random=9",
+      tags: ["Angular", "TensorFlow.js", "MongoDB", "i18n"],
+      liveUrl: "https://language-learn.example.com",
+      githubUrl: "https://github.com/alexchen/language-learning",
+      featured: true
+    },
+    {
+      id: "p10",
+      title: "Augmented Reality Shopping App",
+      description: "AR-powered shopping experience allowing users to visualize products in their space before purchasing.",
+      imageUrl: "https://picsum.photos/800/600?random=10",
+      tags: ["React Native", "ARKit", "ARCore", "3D Modeling"],
+      liveUrl: "https://ar-shopping.example.com",
+      githubUrl: "https://github.com/alexchen/ar-shopping",
+      featured: true
     }
   ],
   skills: [
