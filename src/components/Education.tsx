@@ -6,7 +6,7 @@ const Education = () => {
   const { portfolioData } = usePortfolio();
   
   return (
-    <section className="py-24 relative bg-background" id="education">
+    <section className="py-12 sm:py-24 relative bg-background" id="education">
       {/* Background elements */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAyMCAwIEwgMCAwIDAgMjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLW9wYWNpdHk9IjAuMSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-20 pointer-events-none"></div>
       
@@ -17,68 +17,69 @@ const Education = () => {
         </svg>
       </div>
       
-      <div className="container max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 md:px-12 relative z-10">
         {/* Section header */}
-        <div className="text-center mb-16">
-          <div className="inline-block bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-5 py-2 mb-6">
-            <span className="text-theme-purple font-bold">✦</span> <span className="text-white/80 font-tech tracking-wide">EDUCATION</span>
+        <div className="text-center mb-8 sm:mb-16">
+          <div className="inline-block bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-4 sm:px-5 py-1.5 sm:py-2 mb-4 sm:mb-6">
+            <span className="text-theme-purple font-bold">✦</span> 
+            <span className="text-white/80 font-tech tracking-wide text-sm sm:text-base">EDUCATION</span>
           </div>
           
-          <h2 className="text-4xl md:text-5xl font-tech text-white mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-tech text-white mb-4 sm:mb-6">
             Academic <span className="text-gradient">Background</span>
           </h2>
           
-          <p className="text-white/70 text-xl max-w-2xl mx-auto font-tech">
+          <p className="text-white/70 text-base sm:text-xl max-w-2xl mx-auto font-tech">
             My educational journey that has shaped my professional path
           </p>
         </div>
         
         {portfolioData.education.length === 0 ? (
-          <div className="glass-morphism border border-white/10 rounded-3xl p-12 text-center">
-            <h3 className="text-3xl font-tech text-white mb-4">
+          <div className="glass-morphism border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-12 text-center">
+            <h3 className="text-2xl sm:text-3xl font-tech text-white mb-4">
               No Education Records
             </h3>
-            <p className="text-white/70 text-lg font-tech">
+            <p className="text-white/70 text-base sm:text-lg font-tech">
               No education entries yet.
             </p>
           </div>
         ) : (
           <div className="max-w-4xl mx-auto">
-            <div className="space-y-12">
+            <div className="space-y-6 sm:space-y-12">
               {portfolioData.education.map((edu) => (
                 <div 
                   key={edu.id}
-                  className="glass-morphism border border-white/10 rounded-3xl p-8 relative overflow-hidden transition-transform hover:scale-[1.02] duration-300"
+                  className="glass-morphism border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-8 relative overflow-hidden transition-transform hover:scale-[1.02] duration-300"
                 >
                   {/* Graduation icon in background */}
                   <div className="absolute -right-8 -bottom-8 text-white/5">
-                    <GraduationCap size={120} />
+                    <GraduationCap size={80} className="sm:w-[120px] sm:h-[120px]" />
                   </div>
                   
                   <div className="relative z-10">
-                    <div className="flex items-center gap-4 mb-4">
-                      <span className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-theme-purple/20 border border-theme-purple/30">
-                        <GraduationCap size={24} className="text-theme-purple" />
+                    <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
+                      <span className="inline-flex items-center justify-center w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-theme-purple/20 border border-theme-purple/30 flex-shrink-0">
+                        <GraduationCap size={16} className="sm:w-6 sm:h-6 text-theme-purple" />
                       </span>
                       <div>
-                        <h3 className="text-2xl font-tech text-white">
+                        <h3 className="text-xl sm:text-2xl font-tech text-white">
                           {edu.degree}
                         </h3>
-                        <p className="text-white/70 font-tech">
+                        <p className="text-white/70 font-tech text-sm sm:text-base">
                           {edu.institution}
                         </p>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-2 mb-4 text-white/60 font-tech">
-                      <Calendar size={18} />
+                    <div className="flex items-center gap-2 mb-3 sm:mb-4 text-white/60 font-tech text-sm sm:text-base">
+                      <Calendar size={16} className="sm:w-[18px] sm:h-[18px]" />
                       <span>
                         {edu.startDate} - {edu.endDate || 'Present'}
                       </span>
                     </div>
                     
                     {edu.description && (
-                      <p className="text-white/70 font-tech leading-relaxed">
+                      <p className="text-white/70 font-tech text-sm sm:text-base leading-relaxed">
                         {edu.description}
                       </p>
                     )}

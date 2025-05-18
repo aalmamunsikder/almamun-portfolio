@@ -7,7 +7,7 @@ const Experience = () => {
   const { portfolioData } = usePortfolio();
   
   return (
-    <section className="py-24 relative bg-background" id="experience">
+    <section className="py-12 sm:py-24 relative bg-background" id="experience">
       {/* Background elements */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAyMCAwIEwgMCAwIDAgMjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLW9wYWNpdHk9IjAuMSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-20 pointer-events-none"></div>
       
@@ -18,68 +18,69 @@ const Experience = () => {
         </svg>
       </div>
       
-      <div className="container max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 md:px-12 relative z-10">
         {/* Section header */}
-        <div className="text-center mb-16">
-          <div className="inline-block bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-5 py-2 mb-6">
-            <span className="text-theme-purple font-bold">✦</span> <span className="text-white/80 font-tech tracking-wide">EXPERIENCE</span>
+        <div className="text-center mb-8 sm:mb-16">
+          <div className="inline-block bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-4 sm:px-5 py-1.5 sm:py-2 mb-4 sm:mb-6">
+            <span className="text-theme-purple font-bold">✦</span> 
+            <span className="text-white/80 font-tech tracking-wide text-sm sm:text-base">EXPERIENCE</span>
           </div>
           
-          <h2 className="text-4xl md:text-5xl font-tech text-white mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-tech text-white mb-4 sm:mb-6">
             Work <span className="text-gradient">Experience</span>
           </h2>
           
-          <p className="text-white/70 text-xl max-w-2xl mx-auto font-tech">
+          <p className="text-white/70 text-base sm:text-xl max-w-2xl mx-auto font-tech">
             My professional journey across various roles and companies
           </p>
         </div>
         
         {portfolioData.experiences.length === 0 ? (
-          <div className="glass-morphism border border-white/10 rounded-3xl p-12 text-center">
-            <h3 className="text-3xl font-tech text-white mb-4">
+          <div className="glass-morphism border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-12 text-center">
+            <h3 className="text-2xl sm:text-3xl font-tech text-white mb-4">
               No Work Experience Records
             </h3>
-            <p className="text-white/70 text-lg font-tech">
-              Add work experience details in the admin panel to showcase your professional journey.
+            <p className="text-white/70 text-base sm:text-lg font-tech">
+              No experience entries yet.
             </p>
           </div>
         ) : (
           <div className="relative">
             {/* Timeline line */}
-            <div className="absolute left-16 top-3 bottom-3 w-0.5 bg-gradient-to-b from-theme-purple via-blue-400 to-blue-500 hidden lg:block"></div>
+            <div className="absolute left-8 sm:left-16 top-3 bottom-3 w-0.5 bg-gradient-to-b from-theme-purple via-blue-400 to-blue-500 hidden sm:block"></div>
             
-            <div className="space-y-12">
+            <div className="space-y-6 sm:space-y-12">
               {portfolioData.experiences.map((exp, index) => (
                 <div 
                   key={exp.id}
-                  className="glass-morphism border border-white/10 rounded-3xl p-8 md:pl-24 relative overflow-hidden transition-transform hover:scale-[1.02] duration-300"
+                  className="glass-morphism border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-8 md:pl-24 relative overflow-hidden transition-transform hover:scale-[1.02] duration-300"
                 >
                   {/* Timeline dot - visible only on large screens */}
-                  <div className="absolute left-16 top-11 w-4 h-4 rounded-full bg-theme-purple border-4 border-background hidden lg:block"></div>
+                  <div className="absolute left-8 sm:left-16 top-8 sm:top-11 w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-theme-purple border-4 border-background hidden sm:block"></div>
                   
                   {/* Briefcase icon - visible on all screens */}
-                  <div className="absolute left-6 top-8 inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-theme-purple/20 border border-theme-purple/30 lg:left-4">
-                    <BriefcaseIcon className="w-6 h-6 text-theme-purple" />
+                  <div className="absolute left-4 sm:left-6 top-4 sm:top-8 inline-flex items-center justify-center w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-theme-purple/20 border border-theme-purple/30 lg:left-4">
+                    <BriefcaseIcon className="w-4 h-4 sm:w-6 sm:h-6 text-theme-purple" />
                   </div>
                   
-                  <div>
-                    <div className="mb-4">
-                      <h3 className="text-2xl font-tech text-white">
+                  <div className="ml-16 sm:ml-0">
+                    <div className="mb-3 sm:mb-4">
+                      <h3 className="text-xl sm:text-2xl font-tech text-white">
                         {exp.jobTitle}
                       </h3>
-                      <p className="text-white/70 font-tech">
+                      <p className="text-white/70 font-tech text-sm sm:text-base">
                         {exp.company} {exp.location ? `• ${exp.location}` : ''}
                       </p>
                     </div>
                     
-                    <div className="flex items-center gap-2 mb-4 text-white/60 font-tech">
-                      <Calendar size={18} />
+                    <div className="flex items-center gap-2 mb-3 sm:mb-4 text-white/60 font-tech text-sm sm:text-base">
+                      <Calendar size={16} className="sm:w-[18px] sm:h-[18px]" />
                       <span>
                         {exp.startDate} - {exp.endDate || 'Present'}
                       </span>
                     </div>
                     
-                    <p className="text-white/70 font-tech leading-relaxed">
+                    <p className="text-white/70 font-tech text-sm sm:text-base leading-relaxed">
                       {exp.description}
                     </p>
                   </div>
