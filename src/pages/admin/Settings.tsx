@@ -15,7 +15,8 @@ import {
   LogOut
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { validatePassword, generatePasswordStrengthMessage, updatePassword } from '@/lib/utils/password';
+import { validatePassword, generatePasswordStrengthMessage } from '@/lib/utils/password-validation';
+import { updatePassword } from '@/lib/utils/password';
 import { 
   getActiveSessions, 
   getLoginHistory, 
@@ -26,13 +27,13 @@ import {
 } from '@/lib/utils/security';
 import {
   SECURITY_QUESTIONS,
-  SecurityAnswer,
   saveSecurityQuestions,
   getSecurityQuestions,
   hasSecurityQuestionsSet,
   DEFAULT_QUESTIONS,
   SECURITY_ANSWERS
 } from '@/lib/utils/security-questions';
+import { SecurityAnswer } from '@/types/auth';
 
 const Settings = () => {
   const [currentPassword, setCurrentPassword] = useState('');
