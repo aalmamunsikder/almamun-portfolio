@@ -52,7 +52,8 @@ const createStorage = <T extends { id: string }>(key: keyof typeof STORAGE_KEYS,
       if (typeof window === 'undefined') {
         return mockData;
       }
-      return safeJSONParse(localStorage.getItem(STORAGE_KEYS[key]), mockData);
+      const storedData = localStorage.getItem(STORAGE_KEYS[key]);
+      return storedData ? safeJSONParse(storedData, mockData) : mockData;
     },
 
     save: (items: T[]): void => {
@@ -104,10 +105,8 @@ export const personalInfoStorage = {
     if (typeof window === 'undefined') {
       return mockPortfolioData.personalInfo;
     }
-    return safeJSONParse(
-      localStorage.getItem(STORAGE_KEYS.PERSONAL_INFO),
-      mockPortfolioData.personalInfo
-    );
+    const storedData = localStorage.getItem(STORAGE_KEYS.PERSONAL_INFO);
+    return storedData ? safeJSONParse(storedData, mockPortfolioData.personalInfo) : mockPortfolioData.personalInfo;
   },
 
   save: (info: PersonalInfo): void => {

@@ -50,28 +50,26 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     education: educationStorage.getAll(),
   });
 
-  // Refresh data periodically when admin is logged in
+  // Refresh data periodically for all users
   useEffect(() => {
-    if (adminState) {
-      const refreshData = () => {
-        setPortfolioData({
-          personalInfo: personalInfoStorage.get(),
-          projects: projectStorage.getAll(),
-          skills: skillStorage.getAll(),
-          experiences: experienceStorage.getAll(),
-          education: educationStorage.getAll(),
-        });
-      };
+    const refreshData = () => {
+      setPortfolioData({
+        personalInfo: personalInfoStorage.get(),
+        projects: projectStorage.getAll(),
+        skills: skillStorage.getAll(),
+        experiences: experienceStorage.getAll(),
+        education: educationStorage.getAll(),
+      });
+    };
 
-      // Initial refresh
-      refreshData();
+    // Initial refresh
+    refreshData();
 
-      // Set up periodic refresh
-      const intervalId = setInterval(refreshData, 1000);
+    // Set up periodic refresh
+    const intervalId = setInterval(refreshData, 1000);
 
-      return () => clearInterval(intervalId);
-    }
-  }, [adminState]);
+    return () => clearInterval(intervalId);
+  }, []); // Remove adminState dependency to refresh for all users
 
   const login = (password: string): boolean => {
     // For development, use a default password if environment variable is not set
