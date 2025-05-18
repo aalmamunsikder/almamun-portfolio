@@ -1,54 +1,28 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import { PortfolioProvider } from "@/lib/context/PortfolioContext";
+import React, { Suspense, lazy } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
-// Admin layout and dashboard
-import AdminLayout from "@/components/admin/AdminLayout";
-import Dashboard from "@/components/admin/Dashboard";
-
-// Project components
-import ProjectsManager from "@/components/admin/projects/ProjectsManager";
-import ProjectForm from "@/components/admin/projects/ProjectForm";
-
-// Placeholder components for other sections (to be implemented)
-const PersonalInfo = () => <div className="text-white font-tech text-2xl">Personal Info (Coming Soon)</div>;
-const SkillsManager = () => <div className="text-white font-tech text-2xl">Skills Manager (Coming Soon)</div>;
-const ExperienceManager = () => <div className="text-white font-tech text-2xl">Experience Manager (Coming Soon)</div>;
-const EducationManager = () => <div className="text-white font-tech text-2xl">Education Manager (Coming Soon)</div>;
-const Settings = () => <div className="text-white font-tech text-2xl">Settings (Coming Soon)</div>;
-
-// Authentication (mock for now)
-const isAuthenticated = true; // This would normally check for a valid session/token
+// Lazy load admin components
+const AdminLogin = lazy(() => import('./admin/Login'));
+const AdminIndex = lazy(() => import('./admin/Index'));
 
 const AdminRoutes = () => {
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
   return (
-    <PortfolioProvider>
-      <Routes>
-        <Route path="/" element={<AdminLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="personal" element={<PersonalInfo />} />
-          
-          {/* Projects routes */}
-          <Route path="projects">
-            <Route index element={<ProjectsManager />} />
-            <Route path="new" element={<ProjectForm />} />
-            <Route path="edit/:projectId" element={<ProjectForm />} />
-          </Route>
-          
-          <Route path="skills" element={<SkillsManager />} />
-          <Route path="experience" element={<ExperienceManager />} />
-          <Route path="education" element={<EducationManager />} />
-          <Route path="settings" element={<Settings />} />
-          
-          {/* Fallback route */}
-          <Route path="*" element={<Navigate to="/admin" replace />} />
-        </Route>
-      </Routes>
-    </PortfolioProvider>
+    <Routes>
+      <Route path="login" element={
+        <Suspense fallback={<div className="min-h-screen grid place-items-center bg-background"><p className="text-white font-tech">Loading login page...</p></div>}>
+          <AdminLogin />
+        </Suspense>
+      } />
+      
+      <Route path="/*" element={
+        <Suspense fallback={<div className="min-h-screen grid place-items-center bg-background"><p className="text-white font-tech">Loading admin panel...</p></div>}>
+          <ProtectedRoute>
+            <AdminIndex />
+          </ProtectedRoute>
+        </Suspense>
+      } />
+    </Routes>
   );
 };
 
