@@ -7,7 +7,7 @@ import {
   terminateSession,
   SESSION_TIMEOUT 
 } from '@/lib/utils/security';
-import { initializeSecurityQuestions } from '@/lib/utils/security-questions';
+import { validatePassword, updatePassword as updateStoredPassword } from '@/lib/utils/password';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -41,9 +41,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const attempts = localStorage.getItem('loginAttempts');
     const locked = localStorage.getItem('lockedUntil');
     const sessionId = localStorage.getItem('currentSessionId');
-
-    // Initialize security questions
-    initializeSecurityQuestions();
 
     if (token && sessionId) {
       const loginTime = lastLogin ? new Date(lastLogin) : null;
@@ -104,10 +101,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return false;
     }
 
-    // Get stored password hash
-    const storedPassword = localStorage.getItem('adminPassword') || 'eclipse-2024';
+    console.log('Attempting login with password');
 
-    if (password === storedPassword) {
+    if (validatePassword(password)) {
       const now = new Date();
       const token = btoa(now.getTime().toString());
       const session = createSession();
@@ -123,8 +119,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setCurrentSessionId(session.id);
       
       recordLoginAttempt(true);
+      console.log('Login successful');
       return true;
     } else {
+      console.log('Login failed: invalid password');
       // Handle failed login attempt
       const newAttempts = loginAttempts + 1;
       setLoginAttempts(newAttempts);
@@ -146,13 +144,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const validateCurrentPassword = async (password: string): Promise<boolean> => {
-    const storedPassword = localStorage.getItem('adminPassword') || 'eclipse-2024';
-    return password === storedPassword;
+    return validatePassword(password);
   };
 
   const updatePassword = async (newPassword: string): Promise<void> => {
     try {
-      localStorage.setItem('adminPassword', newPassword);
+      updateStoredPassword(newPassword);
       toast({
         title: "Success",
         description: "Password updated successfully",
