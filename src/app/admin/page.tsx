@@ -1,3 +1,5 @@
+'use client';
+
 import { usePortfolio } from '@/lib/context/PortfolioContext';
 
 export default function AdminDashboard() {

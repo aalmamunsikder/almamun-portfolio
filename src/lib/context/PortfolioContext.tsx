@@ -1,26 +1,25 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Project, Skill, Experience, Education, PersonalInfo } from '@/lib/types';
-import { mockPortfolioData } from '@/lib/mockData';
-import { 
-  experienceStorage, 
+'use client';
+
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import {
   personalInfoStorage,
   projectStorage,
   skillStorage,
+  experienceStorage,
   educationStorage,
   isAdmin,
   setAdmin
 } from '@/lib/utils/storage';
-
-interface PortfolioData {
-  personalInfo: PersonalInfo;
-  projects: Project[];
-  skills: Skill[];
-  experiences: Experience[];
-  education: Education[];
-}
+import { Experience, PersonalInfo, Project, Skill, Education } from '@/lib/types';
 
 interface PortfolioContextType {
-  portfolioData: PortfolioData;
+  portfolioData: {
+    personalInfo: PersonalInfo;
+    projects: Project[];
+    skills: Skill[];
+    experiences: Experience[];
+    education: Education[];
+  };
   isAdmin: boolean;
   login: (password: string) => boolean;
   logout: () => void;
@@ -41,41 +40,47 @@ interface PortfolioContextType {
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
-const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
-
-export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const [adminState, setAdminState] = useState(isAdmin());
-  const [portfolioData, setPortfolioData] = useState<PortfolioData>({
+  const [portfolioData, setPortfolioData] = useState({
     personalInfo: personalInfoStorage.get(),
     projects: projectStorage.getAll(),
     skills: skillStorage.getAll(),
     experiences: experienceStorage.getAll(),
-    education: educationStorage.getAll()
+    education: educationStorage.getAll(),
   });
 
-  // Admin handlers
+  useEffect(() => {
+    // Refresh data when admin state changes
+    setPortfolioData({
+      personalInfo: personalInfoStorage.get(),
+      projects: projectStorage.getAll(),
+      skills: skillStorage.getAll(),
+      experiences: experienceStorage.getAll(),
+      education: educationStorage.getAll(),
+    });
+  }, [adminState]);
+
   const login = (password: string): boolean => {
-    const isValid = password === ADMIN_PASSWORD;
-    setAdminState(isValid);
-    setAdmin(isValid);
+    const isValid = password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
+    if (isValid) {
+      setAdmin(true);
+      setAdminState(true);
+    }
     return isValid;
   };
 
   const logout = () => {
-    setAdminState(false);
     setAdmin(false);
+    setAdminState(false);
   };
 
-  // Personal Info handler
   const updatePersonalInfo = (info: PersonalInfo) => {
-    if (!adminState) return;
     personalInfoStorage.save(info);
     setPortfolioData(prev => ({ ...prev, personalInfo: info }));
   };
 
-  // Project handlers
   const addProject = (project: Omit<Project, "id">) => {
-    if (!adminState) return;
     const newProject = projectStorage.add(project);
     setPortfolioData(prev => ({
       ...prev,
@@ -84,7 +89,6 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   const updateProject = (id: string, project: Omit<Project, "id">) => {
-    if (!adminState) return;
     projectStorage.update(id, project);
     setPortfolioData(prev => ({
       ...prev,
@@ -93,7 +97,6 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   const deleteProject = (id: string) => {
-    if (!adminState) return;
     projectStorage.delete(id);
     setPortfolioData(prev => ({
       ...prev,
@@ -101,9 +104,7 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
     }));
   };
 
-  // Skill handlers
   const addSkill = (skill: Omit<Skill, "id">) => {
-    if (!adminState) return;
     const newSkill = skillStorage.add(skill);
     setPortfolioData(prev => ({
       ...prev,
@@ -112,7 +113,6 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   const updateSkill = (id: string, skill: Omit<Skill, "id">) => {
-    if (!adminState) return;
     skillStorage.update(id, skill);
     setPortfolioData(prev => ({
       ...prev,
@@ -121,7 +121,6 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   const deleteSkill = (id: string) => {
-    if (!adminState) return;
     skillStorage.delete(id);
     setPortfolioData(prev => ({
       ...prev,
@@ -129,9 +128,7 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
     }));
   };
 
-  // Experience handlers
   const addExperience = (experience: Omit<Experience, "id">) => {
-    if (!adminState) return;
     const newExperience = experienceStorage.add(experience);
     setPortfolioData(prev => ({
       ...prev,
@@ -140,28 +137,22 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   const updateExperience = (id: string, experience: Omit<Experience, "id">) => {
-    if (!adminState) return;
     experienceStorage.update(id, experience);
     setPortfolioData(prev => ({
       ...prev,
-      experiences: prev.experiences.map(exp => 
-        exp.id === id ? { ...experience, id } : exp
-      )
+      experiences: prev.experiences.map(e => e.id === id ? { ...experience, id } : e)
     }));
   };
 
   const deleteExperience = (id: string) => {
-    if (!adminState) return;
     experienceStorage.delete(id);
     setPortfolioData(prev => ({
       ...prev,
-      experiences: prev.experiences.filter(exp => exp.id !== id)
+      experiences: prev.experiences.filter(e => e.id !== id)
     }));
   };
 
-  // Education handlers
   const addEducation = (education: Omit<Education, "id">) => {
-    if (!adminState) return;
     const newEducation = educationStorage.add(education);
     setPortfolioData(prev => ({
       ...prev,
@@ -170,7 +161,6 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   const updateEducation = (id: string, education: Omit<Education, "id">) => {
-    if (!adminState) return;
     educationStorage.update(id, education);
     setPortfolioData(prev => ({
       ...prev,
@@ -179,7 +169,6 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   const deleteEducation = (id: string) => {
-    if (!adminState) return;
     educationStorage.delete(id);
     setPortfolioData(prev => ({
       ...prev,
@@ -187,37 +176,37 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
     }));
   };
 
-  const value = {
-    portfolioData,
-    isAdmin: adminState,
-    login,
-    logout,
-    updatePersonalInfo,
-    addProject,
-    updateProject,
-    deleteProject,
-    addSkill,
-    updateSkill,
-    deleteSkill,
-    addExperience,
-    updateExperience,
-    deleteExperience,
-    addEducation,
-    updateEducation,
-    deleteEducation
-  };
-
   return (
-    <PortfolioContext.Provider value={value}>
+    <PortfolioContext.Provider
+      value={{
+        portfolioData,
+        isAdmin: adminState,
+        login,
+        logout,
+        updatePersonalInfo,
+        addProject,
+        updateProject,
+        deleteProject,
+        addSkill,
+        updateSkill,
+        deleteSkill,
+        addExperience,
+        updateExperience,
+        deleteExperience,
+        addEducation,
+        updateEducation,
+        deleteEducation,
+      }}
+    >
       {children}
     </PortfolioContext.Provider>
   );
-};
+}
 
-export const usePortfolio = () => {
+export function usePortfolio() {
   const context = useContext(PortfolioContext);
   if (context === undefined) {
     throw new Error('usePortfolio must be used within a PortfolioProvider');
   }
   return context;
-}; 
+} 
