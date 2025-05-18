@@ -1,7 +1,13 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Project, Skill, Experience, Education, PersonalInfo } from '@/lib/types';
 import { mockPortfolioData } from '@/lib/mockData';
-import { experienceStorage, personalInfoStorage } from '@/lib/utils/storage';
+import { 
+  experienceStorage, 
+  personalInfoStorage,
+  projectStorage,
+  skillStorage,
+  educationStorage
+} from '@/lib/utils/storage';
 
 interface PortfolioData {
   personalInfo: PersonalInfo;
@@ -32,15 +38,67 @@ const PortfolioContext = createContext<PortfolioContextType | undefined>(undefin
 
 export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [portfolioData, setPortfolioData] = useState<PortfolioData>({
-    ...mockPortfolioData,
     personalInfo: personalInfoStorage.get(),
-    experiences: experienceStorage.getAll()
+    projects: projectStorage.getAll(),
+    skills: skillStorage.getAll(),
+    experiences: experienceStorage.getAll(),
+    education: educationStorage.getAll()
   });
 
   // Personal Info handler
   const updatePersonalInfo = (info: PersonalInfo) => {
     personalInfoStorage.save(info);
     setPortfolioData(prev => ({ ...prev, personalInfo: info }));
+  };
+
+  // Project handlers
+  const addProject = (project: Omit<Project, "id">) => {
+    const newProject = projectStorage.add(project);
+    setPortfolioData(prev => ({
+      ...prev,
+      projects: [...prev.projects, newProject]
+    }));
+  };
+
+  const updateProject = (id: string, project: Omit<Project, "id">) => {
+    projectStorage.update(id, project);
+    setPortfolioData(prev => ({
+      ...prev,
+      projects: prev.projects.map(p => p.id === id ? { ...project, id } : p)
+    }));
+  };
+
+  const deleteProject = (id: string) => {
+    projectStorage.delete(id);
+    setPortfolioData(prev => ({
+      ...prev,
+      projects: prev.projects.filter(p => p.id !== id)
+    }));
+  };
+
+  // Skill handlers
+  const addSkill = (skill: Omit<Skill, "id">) => {
+    const newSkill = skillStorage.add(skill);
+    setPortfolioData(prev => ({
+      ...prev,
+      skills: [...prev.skills, newSkill]
+    }));
+  };
+
+  const updateSkill = (id: string, skill: Omit<Skill, "id">) => {
+    skillStorage.update(id, skill);
+    setPortfolioData(prev => ({
+      ...prev,
+      skills: prev.skills.map(s => s.id === id ? { ...skill, id } : s)
+    }));
+  };
+
+  const deleteSkill = (id: string) => {
+    skillStorage.delete(id);
+    setPortfolioData(prev => ({
+      ...prev,
+      skills: prev.skills.filter(s => s.id !== id)
+    }));
   };
 
   // Experience handlers
@@ -70,55 +128,9 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
     }));
   };
 
-  // Project handlers
-  const addProject = (project: Omit<Project, "id">) => {
-    const newProject = { ...project, id: `proj_${Date.now()}` };
-    setPortfolioData(prev => ({
-      ...prev,
-      projects: [...prev.projects, newProject]
-    }));
-  };
-
-  const updateProject = (id: string, project: Omit<Project, "id">) => {
-    setPortfolioData(prev => ({
-      ...prev,
-      projects: prev.projects.map(p => p.id === id ? { ...project, id } : p)
-    }));
-  };
-
-  const deleteProject = (id: string) => {
-    setPortfolioData(prev => ({
-      ...prev,
-      projects: prev.projects.filter(p => p.id !== id)
-    }));
-  };
-
-  // Skill handlers
-  const addSkill = (skill: Omit<Skill, "id">) => {
-    const newSkill = { ...skill, id: `skill_${Date.now()}` };
-    setPortfolioData(prev => ({
-      ...prev,
-      skills: [...prev.skills, newSkill]
-    }));
-  };
-
-  const updateSkill = (id: string, skill: Omit<Skill, "id">) => {
-    setPortfolioData(prev => ({
-      ...prev,
-      skills: prev.skills.map(s => s.id === id ? { ...skill, id } : s)
-    }));
-  };
-
-  const deleteSkill = (id: string) => {
-    setPortfolioData(prev => ({
-      ...prev,
-      skills: prev.skills.filter(s => s.id !== id)
-    }));
-  };
-
   // Education handlers
   const addEducation = (education: Omit<Education, "id">) => {
-    const newEducation = { ...education, id: `edu_${Date.now()}` };
+    const newEducation = educationStorage.add(education);
     setPortfolioData(prev => ({
       ...prev,
       education: [...prev.education, newEducation]
@@ -126,6 +138,7 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   const updateEducation = (id: string, education: Omit<Education, "id">) => {
+    educationStorage.update(id, education);
     setPortfolioData(prev => ({
       ...prev,
       education: prev.education.map(e => e.id === id ? { ...education, id } : e)
@@ -133,6 +146,7 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   const deleteEducation = (id: string) => {
+    educationStorage.delete(id);
     setPortfolioData(prev => ({
       ...prev,
       education: prev.education.filter(e => e.id !== id)

@@ -1,10 +1,13 @@
-import { Experience, PersonalInfo } from '@/lib/types';
+import { Experience, PersonalInfo, Project, Skill, Education } from '@/lib/types';
 import { mockPortfolioData } from '@/lib/mockData';
 
 // Storage keys
 const STORAGE_KEYS = {
   EXPERIENCES: 'portfolio_experiences',
   PERSONAL_INFO: 'portfolio_personal_info',
+  PROJECTS: 'portfolio_projects',
+  SKILLS: 'portfolio_skills',
+  EDUCATION: 'portfolio_education',
   SETTINGS: 'portfolio_settings',
   THEME: 'portfolio_theme'
 } as const;
@@ -23,74 +26,75 @@ const safeJSONParse = <T>(str: string | null, fallback: T): T => {
   }
 };
 
+// Generic storage factory
+const createStorage = <T extends { id: string }>(storageKey: keyof typeof STORAGE_KEYS, mockData: T[]) => {
+  const storage = {
+    getAll: (): T[] => {
+      if (typeof window === 'undefined') return mockData;
+      return safeJSONParse(localStorage.getItem(STORAGE_KEYS[storageKey]), mockData);
+    },
+
+    save: (items: T[]): void => {
+      if (typeof window === 'undefined') {
+        console.log(`Saving ${storageKey} in server mode:`, items);
+        return;
+      }
+      localStorage.setItem(STORAGE_KEYS[storageKey], JSON.stringify(items));
+    },
+
+    add: (item: Omit<T, "id">): T => {
+      const items = storage.getAll();
+      const newItem = {
+        ...item,
+        id: `${storageKey}_${Date.now()}`
+      } as T;
+      
+      items.push(newItem);
+      storage.save(items);
+      return newItem;
+    },
+
+    update: (id: string, item: Omit<T, "id">): void => {
+      const items = storage.getAll();
+      const index = items.findIndex(i => i.id === id);
+      
+      if (index !== -1) {
+        items[index] = { ...item, id } as T;
+        storage.save(items);
+      }
+    },
+
+    delete: (id: string): void => {
+      const items = storage.getAll();
+      const filtered = items.filter(i => i.id !== id);
+      storage.save(filtered);
+    }
+  };
+
+  return storage;
+};
+
 // Personal Info storage
 export const personalInfoStorage = {
   get: (): PersonalInfo => {
-    if (isDev) {
-      return safeJSONParse(
-        localStorage.getItem(STORAGE_KEYS.PERSONAL_INFO),
-        mockPortfolioData.personalInfo
-      );
-    }
-    // In production, use mock data
-    return mockPortfolioData.personalInfo;
+    if (typeof window === 'undefined') return mockPortfolioData.personalInfo;
+    return safeJSONParse(
+      localStorage.getItem(STORAGE_KEYS.PERSONAL_INFO),
+      mockPortfolioData.personalInfo
+    );
   },
 
   save: (info: PersonalInfo): void => {
-    if (isDev) {
-      localStorage.setItem(STORAGE_KEYS.PERSONAL_INFO, JSON.stringify(info));
+    if (typeof window === 'undefined') {
+      console.log('Saving personal info in server mode:', info);
+      return;
     }
-    // In production, we don't save to localStorage
-    console.log('Saving personal info in production mode:', info);
+    localStorage.setItem(STORAGE_KEYS.PERSONAL_INFO, JSON.stringify(info));
   }
 };
 
-// Experience storage
-export const experienceStorage = {
-  getAll: (): Experience[] => {
-    if (isDev) {
-      return safeJSONParse(
-        localStorage.getItem(STORAGE_KEYS.EXPERIENCES),
-        mockPortfolioData.experiences
-      );
-    }
-    // In production, use mock data
-    return mockPortfolioData.experiences;
-  },
-
-  save: (experiences: Experience[]): void => {
-    if (isDev) {
-      localStorage.setItem(STORAGE_KEYS.EXPERIENCES, JSON.stringify(experiences));
-    }
-    // In production, we don't save to localStorage
-    console.log('Saving experiences in production mode:', experiences);
-  },
-
-  add: (experience: Omit<Experience, "id">): Experience => {
-    const experiences = experienceStorage.getAll();
-    const newExperience = {
-      ...experience,
-      id: `exp_${Date.now()}`
-    };
-    
-    experiences.push(newExperience);
-    experienceStorage.save(experiences);
-    return newExperience;
-  },
-
-  update: (id: string, experience: Omit<Experience, "id">): void => {
-    const experiences = experienceStorage.getAll();
-    const index = experiences.findIndex(e => e.id === id);
-    
-    if (index !== -1) {
-      experiences[index] = { ...experience, id };
-      experienceStorage.save(experiences);
-    }
-  },
-
-  delete: (id: string): void => {
-    const experiences = experienceStorage.getAll();
-    const filtered = experiences.filter(e => e.id !== id);
-    experienceStorage.save(filtered);
-  }
-}; 
+// Create storage instances for each data type
+export const experienceStorage = createStorage<Experience>('EXPERIENCES', mockPortfolioData.experiences);
+export const projectStorage = createStorage<Project>('PROJECTS', mockPortfolioData.projects);
+export const skillStorage = createStorage<Skill>('SKILLS', mockPortfolioData.skills);
+export const educationStorage = createStorage<Education>('EDUCATION', mockPortfolioData.education); 
