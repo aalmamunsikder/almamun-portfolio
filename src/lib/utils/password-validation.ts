@@ -1,4 +1,4 @@
-interface PasswordValidationResult {
+export interface PasswordValidationResult {
   isValid: boolean;
   errors: string[];
 }
@@ -49,13 +49,7 @@ export const validatePassword = (password: string): PasswordValidationResult => 
 
 export const generatePasswordStrengthMessage = (password: string): string => {
   const { errors } = validatePassword(password);
-  
-  if (errors.length === 0) {
-    if (password.length >= 12) {
-      return "Strong password! 💪";
-    }
-    return "Good password! You can make it stronger by adding more characters";
-  }
-
-  return "Weak password - see requirements below";
+  if (errors.length === 0) return "Strong password";
+  if (errors.length <= 2) return "Moderate password";
+  return "Weak password";
 }; 

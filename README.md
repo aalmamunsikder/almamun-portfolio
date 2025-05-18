@@ -1,73 +1,61 @@
-# Welcome to your Lovable project
+# Eclipse Client Catcher
 
-## Project info
+A secure admin panel interface with advanced security features and session management.
 
-**URL**: https://lovable.dev/projects/2de2c0c5-20f8-47b4-9105-74cb87c262f6
+## Features
 
-## How can I edit this code?
+- 🔐 Secure password management with strong validation
+- 🛡️ Security questions for account recovery
+- 📱 Active session monitoring and management
+- 📊 Login history tracking
+- 🎨 Modern glass-morphism UI design
+- 🌙 Dark mode interface
+- 🔄 Real-time session updates
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- React
+- TypeScript
+- TailwindCSS
+- Lucide Icons
+- Shadcn/ui Components
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/2de2c0c5-20f8-47b4-9105-74cb87c262f6) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/eclipse-client-catcher.git
+cd eclipse-client-catcher
 ```
 
-**Edit a file directly in GitHub**
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+3. Start the development server:
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-**Use GitHub Codespaces**
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Security Features
 
-## What technologies are used for this project?
+- Password strength validation
+- Security questions management
+- Session tracking and management
+- Login attempt monitoring
+- Secure password reset flow
 
-This project is built with:
+## Contributing
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## How can I deploy this project?
+## License
 
-Simply open [Lovable](https://lovable.dev/projects/2de2c0c5-20f8-47b4-9105-74cb87c262f6) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

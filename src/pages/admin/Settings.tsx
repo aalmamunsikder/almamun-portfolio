@@ -15,7 +15,7 @@ import {
   LogOut
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { validatePassword, generatePasswordStrengthMessage } from '@/lib/utils/password-validation';
+import { validatePassword, generatePasswordStrengthMessage, updatePassword } from '@/lib/utils/password';
 import { 
   getActiveSessions, 
   getLoginHistory, 
@@ -29,7 +29,9 @@ import {
   SecurityAnswer,
   saveSecurityQuestions,
   getSecurityQuestions,
-  hasSecurityQuestionsSet
+  hasSecurityQuestionsSet,
+  DEFAULT_QUESTIONS,
+  SECURITY_ANSWERS
 } from '@/lib/utils/security-questions';
 
 const Settings = () => {
@@ -85,6 +87,7 @@ const Settings = () => {
   // Load security questions
   useEffect(() => {
     const { questions, answers } = getSecurityQuestions();
+    console.log('Loading security questions:', { questions, answers });
     setSelectedQuestions(questions);
     setSecurityAnswers(answers);
   }, []);
@@ -127,7 +130,7 @@ const Settings = () => {
       }
 
       // Update password
-      await updatePassword(newPassword);
+      updatePassword(newPassword);
       
       toast({
         title: "Success",
@@ -224,6 +227,11 @@ const Settings = () => {
         return;
       }
 
+      console.log('Saving security questions:', {
+        selectedQuestions,
+        answers: securityAnswers
+      });
+
       // Save questions
       saveSecurityQuestions(selectedQuestions, securityAnswers);
       
@@ -234,9 +242,37 @@ const Settings = () => {
       
       setIsSettingQuestions(false);
     } catch (error) {
+      console.error('Error saving security questions:', error);
       toast({
         title: "Error",
         description: "Failed to save security questions",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const resetToDefaultQuestions = () => {
+    try {
+      console.log('Resetting to default questions');
+      const defaultAnswers: SecurityAnswer[] = Object.entries(SECURITY_ANSWERS).map(([questionId, answer]) => ({
+        questionId,
+        answer
+      }));
+      
+      setSelectedQuestions(DEFAULT_QUESTIONS);
+      setSecurityAnswers(defaultAnswers);
+      saveSecurityQuestions(DEFAULT_QUESTIONS, defaultAnswers);
+      
+      toast({
+        title: "Success",
+        description: "Reset to default security questions",
+      });
+      setIsSettingQuestions(false);
+    } catch (error) {
+      console.error('Error resetting security questions:', error);
+      toast({
+        title: "Error",
+        description: "Failed to reset security questions",
         variant: "destructive",
       });
     }
@@ -370,7 +406,7 @@ const Settings = () => {
         </div>
 
         {/* Security Questions */}
-        <div className="glass-morphism rounded-2xl p-6 border border-white/10 mt-6">
+        <div className="glass-morphism rounded-2xl p-6 border border-white/10">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-theme-purple/20">
@@ -382,13 +418,22 @@ const Settings = () => {
               </div>
             </div>
             {!isSettingQuestions && (
-              <Button
-                onClick={() => setIsSettingQuestions(true)}
-                variant="outline"
-                className="border-theme-purple/50 text-theme-purple hover:bg-theme-purple/10"
-              >
-                {hasSecurityQuestionsSet() ? 'Update Questions' : 'Set Up Questions'}
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => setIsSettingQuestions(true)}
+                  variant="outline"
+                  className="border-theme-purple/50 text-theme-purple hover:bg-theme-purple/10"
+                >
+                  {hasSecurityQuestionsSet() ? 'Update Questions' : 'Set Up Questions'}
+                </Button>
+                <Button
+                  onClick={resetToDefaultQuestions}
+                  variant="outline"
+                  className="border-white/10 text-white/70 hover:bg-white/5"
+                >
+                  Reset to Default
+                </Button>
+              </div>
             )}
           </div>
 
