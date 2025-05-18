@@ -1,19 +1,14 @@
 import { Experience, PersonalInfo, Project, Skill, Education } from '@/lib/types';
 import { mockPortfolioData } from '@/lib/mockData';
 
-// Storage keys
-const STORAGE_KEYS = {
-  EXPERIENCES: 'portfolio_experiences',
-  PERSONAL_INFO: 'portfolio_personal_info',
-  PROJECTS: 'portfolio_projects',
-  SKILLS: 'portfolio_skills',
-  EDUCATION: 'portfolio_education',
-  SETTINGS: 'portfolio_settings',
-  THEME: 'portfolio_theme'
+// API endpoints
+const API_ENDPOINTS = {
+  EXPERIENCES: '/api/experiences',
+  PERSONAL_INFO: '/api/personal-info',
+  PROJECTS: '/api/projects',
+  SKILLS: '/api/skills',
+  EDUCATION: '/api/education'
 } as const;
-
-// Check if we're in development mode
-const isDev = process.env.NODE_ENV === 'development';
 
 // Helper to safely parse JSON
 const safeJSONParse = <T>(str: string | null, fallback: T): T => {
@@ -26,48 +21,84 @@ const safeJSONParse = <T>(str: string | null, fallback: T): T => {
   }
 };
 
+// Generic API fetch with error handling
+const apiFetch = async <T>(url: string, options?: RequestInit): Promise<T> => {
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.statusText}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('API fetch error:', error);
+    throw error;
+  }
+};
+
 // Generic storage factory
-const createStorage = <T extends { id: string }>(storageKey: keyof typeof STORAGE_KEYS, mockData: T[]) => {
+const createStorage = <T extends { id: string }>(endpoint: keyof typeof API_ENDPOINTS, mockData: T[]) => {
   const storage = {
-    getAll: (): T[] => {
-      if (typeof window === 'undefined') return mockData;
-      return safeJSONParse(localStorage.getItem(STORAGE_KEYS[storageKey]), mockData);
-    },
-
-    save: (items: T[]): void => {
-      if (typeof window === 'undefined') {
-        console.log(`Saving ${storageKey} in server mode:`, items);
-        return;
-      }
-      localStorage.setItem(STORAGE_KEYS[storageKey], JSON.stringify(items));
-    },
-
-    add: (item: Omit<T, "id">): T => {
-      const items = storage.getAll();
-      const newItem = {
-        ...item,
-        id: `${storageKey}_${Date.now()}`
-      } as T;
-      
-      items.push(newItem);
-      storage.save(items);
-      return newItem;
-    },
-
-    update: (id: string, item: Omit<T, "id">): void => {
-      const items = storage.getAll();
-      const index = items.findIndex(i => i.id === id);
-      
-      if (index !== -1) {
-        items[index] = { ...item, id } as T;
-        storage.save(items);
+    getAll: async (): Promise<T[]> => {
+      try {
+        return await apiFetch<T[]>(API_ENDPOINTS[endpoint]);
+      } catch (error) {
+        console.error(`Error fetching ${endpoint}:`, error);
+        return mockData;
       }
     },
 
-    delete: (id: string): void => {
-      const items = storage.getAll();
-      const filtered = items.filter(i => i.id !== id);
-      storage.save(filtered);
+    save: async (items: T[]): Promise<void> => {
+      try {
+        await apiFetch(API_ENDPOINTS[endpoint], {
+          method: 'PUT',
+          body: JSON.stringify(items),
+        });
+      } catch (error) {
+        console.error(`Error saving ${endpoint}:`, error);
+      }
+    },
+
+    add: async (item: Omit<T, "id">): Promise<T> => {
+      try {
+        return await apiFetch<T>(API_ENDPOINTS[endpoint], {
+          method: 'POST',
+          body: JSON.stringify(item),
+        });
+      } catch (error) {
+        console.error(`Error adding to ${endpoint}:`, error);
+        throw error;
+      }
+    },
+
+    update: async (id: string, item: Omit<T, "id">): Promise<void> => {
+      try {
+        await apiFetch(`${API_ENDPOINTS[endpoint]}/${id}`, {
+          method: 'PUT',
+          body: JSON.stringify(item),
+        });
+      } catch (error) {
+        console.error(`Error updating ${endpoint}:`, error);
+        throw error;
+      }
+    },
+
+    delete: async (id: string): Promise<void> => {
+      try {
+        await apiFetch(`${API_ENDPOINTS[endpoint]}/${id}`, {
+          method: 'DELETE',
+        });
+      } catch (error) {
+        console.error(`Error deleting from ${endpoint}:`, error);
+        throw error;
+      }
     }
   };
 
@@ -76,20 +107,25 @@ const createStorage = <T extends { id: string }>(storageKey: keyof typeof STORAG
 
 // Personal Info storage
 export const personalInfoStorage = {
-  get: (): PersonalInfo => {
-    if (typeof window === 'undefined') return mockPortfolioData.personalInfo;
-    return safeJSONParse(
-      localStorage.getItem(STORAGE_KEYS.PERSONAL_INFO),
-      mockPortfolioData.personalInfo
-    );
+  get: async (): Promise<PersonalInfo> => {
+    try {
+      return await apiFetch<PersonalInfo>(API_ENDPOINTS.PERSONAL_INFO);
+    } catch (error) {
+      console.error('Error fetching personal info:', error);
+      return mockPortfolioData.personalInfo;
+    }
   },
 
-  save: (info: PersonalInfo): void => {
-    if (typeof window === 'undefined') {
-      console.log('Saving personal info in server mode:', info);
-      return;
+  save: async (info: PersonalInfo): Promise<void> => {
+    try {
+      await apiFetch(API_ENDPOINTS.PERSONAL_INFO, {
+        method: 'PUT',
+        body: JSON.stringify(info),
+      });
+    } catch (error) {
+      console.error('Error saving personal info:', error);
+      throw error;
     }
-    localStorage.setItem(STORAGE_KEYS.PERSONAL_INFO, JSON.stringify(info));
   }
 };
 
