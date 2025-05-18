@@ -1,6 +1,6 @@
-# Portfolio Website
+# Al Mamun Sikder - Portfolio
 
-A modern, responsive portfolio website built with Next.js and Tailwind CSS.
+A modern, responsive portfolio website showcasing Al Mamun Sikder's professional work and skills.
 
 ## Features
 
