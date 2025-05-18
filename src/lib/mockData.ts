@@ -74,47 +74,212 @@ export const mockPortfolioData: PortfolioData = {
     }
   ],
   skills: [
+    // Frontend Skills
     {
       id: "s1",
       name: "React",
       icon: "react",
-      level: 90,
+      level: 95,
       category: "Frontend"
     },
     {
       id: "s2",
+      name: "Next.js",
+      icon: "nextjs",
+      level: 90,
+      category: "Frontend"
+    },
+    {
+      id: "s3",
+      name: "JavaScript",
+      icon: "javascript",
+      level: 95,
+      category: "Frontend"
+    },
+    {
+      id: "s4",
+      name: "TypeScript",
+      icon: "typescript",
+      level: 90,
+      category: "Frontend"
+    },
+    {
+      id: "s5",
+      name: "HTML5/CSS3",
+      icon: "html",
+      level: 95,
+      category: "Frontend"
+    },
+    {
+      id: "s6",
+      name: "Tailwind CSS",
+      icon: "tailwind",
+      level: 90,
+      category: "Frontend"
+    },
+    {
+      id: "s7",
+      name: "Redux",
+      icon: "redux",
+      level: 85,
+      category: "Frontend"
+    },
+    {
+      id: "s8",
+      name: "Framer Motion",
+      icon: "framer",
+      level: 80,
+      category: "Frontend"
+    },
+
+    // Backend Skills
+    {
+      id: "s9",
       name: "Node.js",
       icon: "nodejs",
+      level: 90,
+      category: "Backend"
+    },
+    {
+      id: "s10",
+      name: "Express",
+      icon: "express",
       level: 85,
       category: "Backend"
     },
     {
-      id: "s3",
-      name: "TypeScript",
-      icon: "typescript",
+      id: "s11",
+      name: "Python",
+      icon: "python",
       level: 80,
-      category: "Language"
+      category: "Backend"
     },
     {
-      id: "s4",
+      id: "s12",
+      name: "Django",
+      icon: "django",
+      level: 75,
+      category: "Backend"
+    },
+    {
+      id: "s13",
+      name: "GraphQL",
+      icon: "graphql",
+      level: 85,
+      category: "Backend"
+    },
+    {
+      id: "s14",
+      name: "REST API",
+      icon: "api",
+      level: 90,
+      category: "Backend"
+    },
+
+    // Database Skills
+    {
+      id: "s15",
       name: "MongoDB",
       icon: "mongodb",
-      level: 75,
+      level: 90,
       category: "Database"
     },
     {
-      id: "s5",
-      name: "GraphQL",
-      icon: "graphql",
-      level: 70,
-      category: "API"
+      id: "s16",
+      name: "PostgreSQL",
+      icon: "postgresql",
+      level: 85,
+      category: "Database"
     },
     {
-      id: "s6",
+      id: "s17",
+      name: "MySQL",
+      icon: "mysql",
+      level: 80,
+      category: "Database"
+    },
+    {
+      id: "s18",
+      name: "Firebase",
+      icon: "firebase",
+      level: 85,
+      category: "Database"
+    },
+
+    // DevOps Skills
+    {
+      id: "s19",
       name: "Docker",
       icon: "docker",
-      level: 65,
+      level: 80,
       category: "DevOps"
+    },
+    {
+      id: "s20",
+      name: "AWS",
+      icon: "aws",
+      level: 75,
+      category: "DevOps"
+    },
+    {
+      id: "s21",
+      name: "CI/CD",
+      icon: "cicd",
+      level: 75,
+      category: "DevOps"
+    },
+    {
+      id: "s22",
+      name: "Git",
+      icon: "git",
+      level: 90,
+      category: "DevOps"
+    },
+
+    // Mobile Skills
+    {
+      id: "s23",
+      name: "React Native",
+      icon: "reactnative",
+      level: 80,
+      category: "Mobile"
+    },
+    {
+      id: "s24",
+      name: "Flutter",
+      icon: "flutter",
+      level: 70,
+      category: "Mobile"
+    },
+    {
+      id: "s25",
+      name: "Responsive Design",
+      icon: "responsive",
+      level: 95,
+      category: "Mobile"
+    },
+
+    // Design Skills
+    {
+      id: "s26",
+      name: "Figma",
+      icon: "figma",
+      level: 85,
+      category: "Design"
+    },
+    {
+      id: "s27",
+      name: "Adobe XD",
+      icon: "adobexd",
+      level: 75,
+      category: "Design"
+    },
+    {
+      id: "s28",
+      name: "UI/UX Design",
+      icon: "uiux",
+      level: 80,
+      category: "Design"
     }
   ],
   experiences: [
