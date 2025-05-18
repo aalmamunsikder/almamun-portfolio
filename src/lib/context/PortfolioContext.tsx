@@ -50,26 +50,39 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     education: educationStorage.getAll(),
   });
 
-  // Refresh data periodically for all users
+  // Function to refresh all data
+  const refreshData = () => {
+    setPortfolioData({
+      personalInfo: personalInfoStorage.get(),
+      projects: projectStorage.getAll(),
+      skills: skillStorage.getAll(),
+      experiences: experienceStorage.getAll(),
+      education: educationStorage.getAll(),
+    });
+  };
+
+  // Listen for storage events
   useEffect(() => {
-    const refreshData = () => {
-      setPortfolioData({
-        personalInfo: personalInfoStorage.get(),
-        projects: projectStorage.getAll(),
-        skills: skillStorage.getAll(),
-        experiences: experienceStorage.getAll(),
-        education: educationStorage.getAll(),
-      });
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key && event.key.startsWith('portfolio_')) {
+        refreshData();
+      }
     };
 
-    // Initial refresh
+    // Listen for storage events
+    window.addEventListener('storage', handleStorageChange);
+
+    // Initial data load
     refreshData();
 
-    // Set up periodic refresh
+    // Set up periodic refresh as a backup
     const intervalId = setInterval(refreshData, 1000);
 
-    return () => clearInterval(intervalId);
-  }, []); // Remove adminState dependency to refresh for all users
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(intervalId);
+    };
+  }, []);
 
   const login = (password: string): boolean => {
     // For development, use a default password if environment variable is not set

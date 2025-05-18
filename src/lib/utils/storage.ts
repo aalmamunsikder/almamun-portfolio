@@ -11,6 +11,11 @@ const STORAGE_KEYS = {
   EDUCATION: 'portfolio_education'
 } as const;
 
+// Global state to ensure data consistency across components
+const globalState: {
+  [key: string]: any;
+} = {};
+
 // Helper to safely parse JSON
 const safeJSONParse = <T>(str: string | null, fallback: T): T => {
   if (!str) return fallback;
@@ -27,16 +32,45 @@ const safeJSONSave = (key: string, data: any): void => {
   try {
     if (typeof window !== 'undefined') {
       localStorage.setItem(key, JSON.stringify(data));
+      // Update global state
+      globalState[key] = data;
+      // Dispatch storage event to notify other components
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: key,
+        newValue: JSON.stringify(data)
+      }));
     }
   } catch (e) {
     console.error('Error saving to localStorage:', e);
   }
 };
 
+// Helper to get data from storage or global state
+const getData = <T>(key: string, fallback: T): T => {
+  if (typeof window === 'undefined') {
+    return fallback;
+  }
+  
+  // First check global state
+  if (globalState[key] !== undefined) {
+    return globalState[key];
+  }
+  
+  // Then check localStorage
+  const storedData = localStorage.getItem(key);
+  const parsedData = storedData ? safeJSONParse(storedData, fallback) : fallback;
+  
+  // Update global state
+  globalState[key] = parsedData;
+  
+  return parsedData;
+};
+
 // Check if user is admin
 export const isAdmin = (): boolean => {
   if (typeof window === 'undefined') return false;
-  return localStorage.getItem(STORAGE_KEYS.IS_ADMIN) === 'true';
+  const adminState = getData<string>(STORAGE_KEYS.IS_ADMIN, 'false');
+  return adminState === 'true';
 };
 
 // Set admin status
@@ -49,11 +83,7 @@ export const setAdmin = (status: boolean): void => {
 const createStorage = <T extends { id: string }>(key: keyof typeof STORAGE_KEYS, mockData: T[]) => {
   const storage = {
     getAll: (): T[] => {
-      if (typeof window === 'undefined') {
-        return mockData;
-      }
-      const storedData = localStorage.getItem(STORAGE_KEYS[key]);
-      return storedData ? safeJSONParse(storedData, mockData) : mockData;
+      return getData(STORAGE_KEYS[key], mockData);
     },
 
     save: (items: T[]): void => {
@@ -102,11 +132,7 @@ const createStorage = <T extends { id: string }>(key: keyof typeof STORAGE_KEYS,
 // Personal Info storage
 export const personalInfoStorage = {
   get: (): PersonalInfo => {
-    if (typeof window === 'undefined') {
-      return mockPortfolioData.personalInfo;
-    }
-    const storedData = localStorage.getItem(STORAGE_KEYS.PERSONAL_INFO);
-    return storedData ? safeJSONParse(storedData, mockPortfolioData.personalInfo) : mockPortfolioData.personalInfo;
+    return getData(STORAGE_KEYS.PERSONAL_INFO, mockPortfolioData.personalInfo);
   },
 
   save: (info: PersonalInfo): void => {
