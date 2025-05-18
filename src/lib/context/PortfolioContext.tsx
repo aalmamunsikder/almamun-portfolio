@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Project, Skill, Experience, Education, PersonalInfo } from '@/lib/types';
 import { mockPortfolioData } from '@/lib/mockData';
-import { experienceStorage } from '@/lib/utils/storage';
+import { experienceStorage, personalInfoStorage } from '@/lib/utils/storage';
 
 interface PortfolioData {
   personalInfo: PersonalInfo;
@@ -33,8 +33,15 @@ const PortfolioContext = createContext<PortfolioContextType | undefined>(undefin
 export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [portfolioData, setPortfolioData] = useState<PortfolioData>({
     ...mockPortfolioData,
+    personalInfo: personalInfoStorage.get(),
     experiences: experienceStorage.getAll()
   });
+
+  // Personal Info handler
+  const updatePersonalInfo = (info: PersonalInfo) => {
+    personalInfoStorage.save(info);
+    setPortfolioData(prev => ({ ...prev, personalInfo: info }));
+  };
 
   // Experience handlers
   const addExperience = (experience: Omit<Experience, "id">) => {
@@ -63,11 +70,7 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
     }));
   };
 
-  // Other handlers (projects, skills, education) can be added here...
-  const updatePersonalInfo = (info: PersonalInfo) => {
-    setPortfolioData(prev => ({ ...prev, personalInfo: info }));
-  };
-
+  // Project handlers
   const addProject = (project: Omit<Project, "id">) => {
     const newProject = { ...project, id: `proj_${Date.now()}` };
     setPortfolioData(prev => ({
@@ -90,6 +93,7 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
     }));
   };
 
+  // Skill handlers
   const addSkill = (skill: Omit<Skill, "id">) => {
     const newSkill = { ...skill, id: `skill_${Date.now()}` };
     setPortfolioData(prev => ({
@@ -112,6 +116,7 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
     }));
   };
 
+  // Education handlers
   const addEducation = (education: Omit<Education, "id">) => {
     const newEducation = { ...education, id: `edu_${Date.now()}` };
     setPortfolioData(prev => ({

@@ -1,9 +1,10 @@
-import { Experience } from '@/lib/types';
+import { Experience, PersonalInfo } from '@/lib/types';
 import { mockPortfolioData } from '@/lib/mockData';
 
 // Storage keys
 const STORAGE_KEYS = {
   EXPERIENCES: 'portfolio_experiences',
+  PERSONAL_INFO: 'portfolio_personal_info',
   SETTINGS: 'portfolio_settings',
   THEME: 'portfolio_theme'
 } as const;
@@ -19,6 +20,28 @@ const safeJSONParse = <T>(str: string | null, fallback: T): T => {
   } catch (e) {
     console.error('Error parsing JSON:', e);
     return fallback;
+  }
+};
+
+// Personal Info storage
+export const personalInfoStorage = {
+  get: (): PersonalInfo => {
+    if (isDev) {
+      return safeJSONParse(
+        localStorage.getItem(STORAGE_KEYS.PERSONAL_INFO),
+        mockPortfolioData.personalInfo
+      );
+    }
+    // In production, use mock data
+    return mockPortfolioData.personalInfo;
+  },
+
+  save: (info: PersonalInfo): void => {
+    if (isDev) {
+      localStorage.setItem(STORAGE_KEYS.PERSONAL_INFO, JSON.stringify(info));
+    }
+    // In production, we don't save to localStorage
+    console.log('Saving personal info in production mode:', info);
   }
 };
 
