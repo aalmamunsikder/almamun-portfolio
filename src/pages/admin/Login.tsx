@@ -4,12 +4,7 @@ import { useAuth } from '@/lib/auth/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Lock, Shield, AlertCircle, Calculator, Brain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { 
-  getRandomSecurityQuestion, 
-  validateSecurityAnswer, 
-  hasSecurityQuestionsSet,
-  DEFAULT_SECURITY_QUESTIONS 
-} from '@/lib/utils/security-questions';
+import { getRandomSecurityQuestion, validateSecurityAnswer } from '@/lib/utils/security-questions';
 import { generateMathQuestion } from '@/lib/utils/math-verification';
 
 const Login = () => {
@@ -31,9 +26,6 @@ const Login = () => {
     setMathQuestion(generateMathQuestion());
     const question = getRandomSecurityQuestion();
     console.log('Initial security question:', question);
-    if (!question) {
-      console.log('No security question available, using default questions:', DEFAULT_SECURITY_QUESTIONS);
-    }
     setCurrentQuestion(question);
   }, []);
 
@@ -95,13 +87,13 @@ const Login = () => {
         throw new Error('Invalid login state');
       }
 
-      console.log('Validating security answer:', {
+      console.log('Attempting security validation:', {
         questionId: currentQuestion.id,
-        answer: securityAnswer
+        answer: securityAnswer,
+        question: currentQuestion.question
       });
 
       const isValid = validateSecurityAnswer(currentQuestion.id, securityAnswer);
-      console.log('Security answer validation result:', isValid);
       
       if (isValid) {
         setIsSecurityVerified(true);

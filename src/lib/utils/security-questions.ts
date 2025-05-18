@@ -13,94 +13,67 @@ export const SECURITY_QUESTIONS: SecurityQuestion[] = [
   { id: 'street', question: 'What street did you grow up on?' }
 ];
 
-// Default security questions and answers for development/testing
-export const DEFAULT_SECURITY_QUESTIONS = {
-  questions: ['birth', 'pet', 'school'],
-  answers: [
-    { questionId: 'birth', answer: btoa('dhaka'.toLowerCase().trim()) },
-    { questionId: 'pet', answer: btoa('tommy'.toLowerCase().trim()) },
-    { questionId: 'school', answer: btoa('abc school'.toLowerCase().trim()) }
-  ]
-};
-
-export const initializeSecurityQuestions = (): void => {
-  try {
-    const existingData = localStorage.getItem('securityQuestions');
-    if (!existingData) {
-      localStorage.setItem('securityQuestions', JSON.stringify(DEFAULT_SECURITY_QUESTIONS));
-    }
-  } catch (error) {
-    console.error('Failed to initialize security questions:', error);
-  }
-};
-
-export const saveSecurityQuestions = (selectedQuestions: string[], answers: SecurityAnswer[]): void => {
-  try {
-    localStorage.setItem('securityQuestions', JSON.stringify({
-      questions: selectedQuestions,
-      answers: answers.map(a => ({ 
-        questionId: a.questionId, 
-        answer: btoa(a.answer.toLowerCase().trim()) 
-      }))
-    }));
-  } catch (error) {
-    console.error('Failed to save security questions:', error);
-    throw new Error('Failed to save security questions');
-  }
-};
-
-export const getSecurityQuestions = (): { questions: string[], answers: SecurityAnswer[] } => {
-  try {
-    const data = localStorage.getItem('securityQuestions');
-    if (!data) {
-      // Return default questions if none exist
-      return DEFAULT_SECURITY_QUESTIONS;
-    }
-    const parsed = JSON.parse(data);
-    // Return default questions if parsed data is invalid
-    if (!parsed.questions || !parsed.answers || 
-        !Array.isArray(parsed.questions) || !Array.isArray(parsed.answers) ||
-        parsed.questions.length < 3 || parsed.answers.length < 3) {
-      return DEFAULT_SECURITY_QUESTIONS;
-    }
-    return parsed;
-  } catch {
-    // Return default questions on any error
-    return DEFAULT_SECURITY_QUESTIONS;
-  }
+// Default security questions and answers
+const DEFAULT_QUESTIONS = ['birth', 'pet', 'school'];
+const SECURITY_ANSWERS = {
+  birth: 'dhaka',
+  pet: 'tommy',
+  school: 'abc school'
 };
 
 export const validateSecurityAnswer = (questionId: string, answer: string): boolean => {
   try {
-    const { answers } = getSecurityQuestions();
-    const storedAnswer = answers.find(a => a.questionId === questionId);
-    if (!storedAnswer) return false;
+    const correctAnswer = SECURITY_ANSWERS[questionId as keyof typeof SECURITY_ANSWERS];
+    if (!correctAnswer) return false;
     
-    const encodedAnswer = btoa(answer.toLowerCase().trim());
-    console.log('Validating answer:', {
+    const normalizedInput = answer.toLowerCase().trim();
+    const isValid = normalizedInput === correctAnswer;
+    
+    console.log('Security validation:', {
       questionId,
-      providedAnswer: encodedAnswer,
-      storedAnswer: storedAnswer.answer,
-      isValid: encodedAnswer === storedAnswer.answer
+      providedAnswer: normalizedInput,
+      correctAnswer,
+      isValid
     });
     
-    return encodedAnswer === storedAnswer.answer;
+    return isValid;
   } catch (error) {
     console.error('Error validating security answer:', error);
     return false;
   }
 };
 
-export const hasSecurityQuestionsSet = (): boolean => {
-  const { questions, answers } = getSecurityQuestions();
-  return questions.length >= 3 && answers.length >= 3;
+export const getRandomSecurityQuestion = (): SecurityQuestion | null => {
+  try {
+    const randomIndex = Math.floor(Math.random() * DEFAULT_QUESTIONS.length);
+    const questionId = DEFAULT_QUESTIONS[randomIndex];
+    const question = SECURITY_QUESTIONS.find(q => q.id === questionId);
+    
+    console.log('Getting random question:', {
+      questionId,
+      question
+    });
+    
+    return question || null;
+  } catch (error) {
+    console.error('Error getting random question:', error);
+    return null;
+  }
 };
 
-export const getRandomSecurityQuestion = (): SecurityQuestion | null => {
-  const { questions } = getSecurityQuestions();
-  if (questions.length === 0) return null;
-  
-  const randomIndex = Math.floor(Math.random() * questions.length);
-  const questionId = questions[randomIndex];
-  return SECURITY_QUESTIONS.find(q => q.id === questionId) || null;
+export const hasSecurityQuestionsSet = (): boolean => {
+  return true; // Always return true since we're using hardcoded questions
+};
+
+// These functions are no longer needed but kept for type compatibility
+export const initializeSecurityQuestions = (): void => {};
+export const saveSecurityQuestions = (selectedQuestions: string[], answers: SecurityAnswer[]): void => {};
+export const getSecurityQuestions = (): { questions: string[], answers: SecurityAnswer[] } => {
+  return {
+    questions: DEFAULT_QUESTIONS,
+    answers: Object.entries(SECURITY_ANSWERS).map(([questionId, answer]) => ({
+      questionId,
+      answer: btoa(answer)
+    }))
+  };
 }; 
