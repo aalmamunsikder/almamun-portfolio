@@ -1,0 +1,21 @@
+{
+  "personalInfo": {
+    "name": "",
+    "title": "",
+    "tagline": "",
+    "avatar": "",
+    "bio": "",
+    "resumeUrl": "",
+    "contactInfo": {
+      "email": "",
+      "phone": "",
+      "location": "",
+      "availableForWork": false
+    },
+    "socialLinks": []
+  },
+  "projects": [],
+  "skills": [],
+  "experiences": [],
+  "education": []
+} 
