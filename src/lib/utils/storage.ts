@@ -22,6 +22,17 @@ const safeJSONParse = <T>(str: string | null, fallback: T): T => {
   }
 };
 
+// Helper to safely stringify and save JSON
+const safeJSONSave = (key: string, data: any): void => {
+  try {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+  } catch (e) {
+    console.error('Error saving to localStorage:', e);
+  }
+};
+
 // Check if user is admin
 export const isAdmin = (): boolean => {
   if (typeof window === 'undefined') return false;
@@ -31,14 +42,14 @@ export const isAdmin = (): boolean => {
 // Set admin status
 export const setAdmin = (status: boolean): void => {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(STORAGE_KEYS.IS_ADMIN, status.toString());
+  safeJSONSave(STORAGE_KEYS.IS_ADMIN, status.toString());
 };
 
 // Generic storage factory
 const createStorage = <T extends { id: string }>(key: keyof typeof STORAGE_KEYS, mockData: T[]) => {
   const storage = {
     getAll: (): T[] => {
-      if (typeof window === 'undefined' || !isAdmin()) {
+      if (typeof window === 'undefined') {
         return mockData;
       }
       return safeJSONParse(localStorage.getItem(STORAGE_KEYS[key]), mockData);
@@ -46,7 +57,7 @@ const createStorage = <T extends { id: string }>(key: keyof typeof STORAGE_KEYS,
 
     save: (items: T[]): void => {
       if (typeof window === 'undefined' || !isAdmin()) return;
-      localStorage.setItem(STORAGE_KEYS[key], JSON.stringify(items));
+      safeJSONSave(STORAGE_KEYS[key], items);
     },
 
     add: (item: Omit<T, "id">): T => {
@@ -55,7 +66,7 @@ const createStorage = <T extends { id: string }>(key: keyof typeof STORAGE_KEYS,
       const items = storage.getAll();
       const newItem = {
         ...item,
-        id: `${key}_${Date.now()}`
+        id: `${key}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
       } as T;
       
       items.push(newItem);
@@ -90,7 +101,7 @@ const createStorage = <T extends { id: string }>(key: keyof typeof STORAGE_KEYS,
 // Personal Info storage
 export const personalInfoStorage = {
   get: (): PersonalInfo => {
-    if (typeof window === 'undefined' || !isAdmin()) {
+    if (typeof window === 'undefined') {
       return mockPortfolioData.personalInfo;
     }
     return safeJSONParse(
@@ -101,7 +112,7 @@ export const personalInfoStorage = {
 
   save: (info: PersonalInfo): void => {
     if (typeof window === 'undefined' || !isAdmin()) return;
-    localStorage.setItem(STORAGE_KEYS.PERSONAL_INFO, JSON.stringify(info));
+    safeJSONSave(STORAGE_KEYS.PERSONAL_INFO, info);
   }
 };
 

@@ -50,19 +50,34 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     education: educationStorage.getAll(),
   });
 
+  // Refresh data periodically when admin is logged in
   useEffect(() => {
-    // Refresh data when admin state changes
-    setPortfolioData({
-      personalInfo: personalInfoStorage.get(),
-      projects: projectStorage.getAll(),
-      skills: skillStorage.getAll(),
-      experiences: experienceStorage.getAll(),
-      education: educationStorage.getAll(),
-    });
+    if (adminState) {
+      const refreshData = () => {
+        setPortfolioData({
+          personalInfo: personalInfoStorage.get(),
+          projects: projectStorage.getAll(),
+          skills: skillStorage.getAll(),
+          experiences: experienceStorage.getAll(),
+          education: educationStorage.getAll(),
+        });
+      };
+
+      // Initial refresh
+      refreshData();
+
+      // Set up periodic refresh
+      const intervalId = setInterval(refreshData, 1000);
+
+      return () => clearInterval(intervalId);
+    }
   }, [adminState]);
 
   const login = (password: string): boolean => {
-    const isValid = password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
+    // For development, use a default password if environment variable is not set
+    const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
+    const isValid = password === adminPassword;
+    
     if (isValid) {
       setAdmin(true);
       setAdminState(true);
@@ -76,104 +91,156 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updatePersonalInfo = (info: PersonalInfo) => {
-    personalInfoStorage.save(info);
-    setPortfolioData(prev => ({ ...prev, personalInfo: info }));
+    try {
+      personalInfoStorage.save(info);
+      setPortfolioData(prev => ({ ...prev, personalInfo: info }));
+    } catch (error) {
+      console.error('Error updating personal info:', error);
+    }
   };
 
   const addProject = (project: Omit<Project, "id">) => {
-    const newProject = projectStorage.add(project);
-    setPortfolioData(prev => ({
-      ...prev,
-      projects: [...prev.projects, newProject]
-    }));
+    try {
+      const newProject = projectStorage.add(project);
+      setPortfolioData(prev => ({
+        ...prev,
+        projects: [...prev.projects, newProject]
+      }));
+    } catch (error) {
+      console.error('Error adding project:', error);
+    }
   };
 
   const updateProject = (id: string, project: Omit<Project, "id">) => {
-    projectStorage.update(id, project);
-    setPortfolioData(prev => ({
-      ...prev,
-      projects: prev.projects.map(p => p.id === id ? { ...project, id } : p)
-    }));
+    try {
+      projectStorage.update(id, project);
+      setPortfolioData(prev => ({
+        ...prev,
+        projects: prev.projects.map(p => p.id === id ? { ...project, id } : p)
+      }));
+    } catch (error) {
+      console.error('Error updating project:', error);
+    }
   };
 
   const deleteProject = (id: string) => {
-    projectStorage.delete(id);
-    setPortfolioData(prev => ({
-      ...prev,
-      projects: prev.projects.filter(p => p.id !== id)
-    }));
+    try {
+      projectStorage.delete(id);
+      setPortfolioData(prev => ({
+        ...prev,
+        projects: prev.projects.filter(p => p.id !== id)
+      }));
+    } catch (error) {
+      console.error('Error deleting project:', error);
+    }
   };
 
   const addSkill = (skill: Omit<Skill, "id">) => {
-    const newSkill = skillStorage.add(skill);
-    setPortfolioData(prev => ({
-      ...prev,
-      skills: [...prev.skills, newSkill]
-    }));
+    try {
+      const newSkill = skillStorage.add(skill);
+      setPortfolioData(prev => ({
+        ...prev,
+        skills: [...prev.skills, newSkill]
+      }));
+    } catch (error) {
+      console.error('Error adding skill:', error);
+    }
   };
 
   const updateSkill = (id: string, skill: Omit<Skill, "id">) => {
-    skillStorage.update(id, skill);
-    setPortfolioData(prev => ({
-      ...prev,
-      skills: prev.skills.map(s => s.id === id ? { ...skill, id } : s)
-    }));
+    try {
+      skillStorage.update(id, skill);
+      setPortfolioData(prev => ({
+        ...prev,
+        skills: prev.skills.map(s => s.id === id ? { ...skill, id } : s)
+      }));
+    } catch (error) {
+      console.error('Error updating skill:', error);
+    }
   };
 
   const deleteSkill = (id: string) => {
-    skillStorage.delete(id);
-    setPortfolioData(prev => ({
-      ...prev,
-      skills: prev.skills.filter(s => s.id !== id)
-    }));
+    try {
+      skillStorage.delete(id);
+      setPortfolioData(prev => ({
+        ...prev,
+        skills: prev.skills.filter(s => s.id !== id)
+      }));
+    } catch (error) {
+      console.error('Error deleting skill:', error);
+    }
   };
 
   const addExperience = (experience: Omit<Experience, "id">) => {
-    const newExperience = experienceStorage.add(experience);
-    setPortfolioData(prev => ({
-      ...prev,
-      experiences: [...prev.experiences, newExperience]
-    }));
+    try {
+      const newExperience = experienceStorage.add(experience);
+      setPortfolioData(prev => ({
+        ...prev,
+        experiences: [...prev.experiences, newExperience]
+      }));
+    } catch (error) {
+      console.error('Error adding experience:', error);
+    }
   };
 
   const updateExperience = (id: string, experience: Omit<Experience, "id">) => {
-    experienceStorage.update(id, experience);
-    setPortfolioData(prev => ({
-      ...prev,
-      experiences: prev.experiences.map(e => e.id === id ? { ...experience, id } : e)
-    }));
+    try {
+      experienceStorage.update(id, experience);
+      setPortfolioData(prev => ({
+        ...prev,
+        experiences: prev.experiences.map(e => e.id === id ? { ...experience, id } : e)
+      }));
+    } catch (error) {
+      console.error('Error updating experience:', error);
+    }
   };
 
   const deleteExperience = (id: string) => {
-    experienceStorage.delete(id);
-    setPortfolioData(prev => ({
-      ...prev,
-      experiences: prev.experiences.filter(e => e.id !== id)
-    }));
+    try {
+      experienceStorage.delete(id);
+      setPortfolioData(prev => ({
+        ...prev,
+        experiences: prev.experiences.filter(e => e.id !== id)
+      }));
+    } catch (error) {
+      console.error('Error deleting experience:', error);
+    }
   };
 
   const addEducation = (education: Omit<Education, "id">) => {
-    const newEducation = educationStorage.add(education);
-    setPortfolioData(prev => ({
-      ...prev,
-      education: [...prev.education, newEducation]
-    }));
+    try {
+      const newEducation = educationStorage.add(education);
+      setPortfolioData(prev => ({
+        ...prev,
+        education: [...prev.education, newEducation]
+      }));
+    } catch (error) {
+      console.error('Error adding education:', error);
+    }
   };
 
   const updateEducation = (id: string, education: Omit<Education, "id">) => {
-    educationStorage.update(id, education);
-    setPortfolioData(prev => ({
-      ...prev,
-      education: prev.education.map(e => e.id === id ? { ...education, id } : e)
-    }));
+    try {
+      educationStorage.update(id, education);
+      setPortfolioData(prev => ({
+        ...prev,
+        education: prev.education.map(e => e.id === id ? { ...education, id } : e)
+      }));
+    } catch (error) {
+      console.error('Error updating education:', error);
+    }
   };
 
   const deleteEducation = (id: string) => {
-    educationStorage.delete(id);
-    setPortfolioData(prev => ({
-      ...prev,
-      education: prev.education.filter(e => e.id !== id)
-    }));
+    try {
+      educationStorage.delete(id);
+      setPortfolioData(prev => ({
+        ...prev,
+        education: prev.education.filter(e => e.id !== id)
+      }));
+    } catch (error) {
+      console.error('Error deleting education:', error);
+    }
   };
 
   return (
