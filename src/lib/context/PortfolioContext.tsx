@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Project, Skill, Experience, Education, PersonalInfo } from '@/lib/types';
-import defaultData from '@/data/default-data.json';
+import { mockPortfolioData } from '@/lib/mockData';
+import { experienceStorage } from '@/lib/utils/storage';
 
 interface PortfolioData {
   personalInfo: PersonalInfo;
@@ -13,81 +14,141 @@ interface PortfolioData {
 interface PortfolioContextType {
   portfolioData: PortfolioData;
   updatePersonalInfo: (info: PersonalInfo) => void;
-  updateProjects: (projects: Project[]) => void;
-  updateSkills: (skills: Skill[]) => void;
-  updateExperiences: (experiences: Experience[]) => void;
-  updateEducation: (education: Education[]) => void;
+  addProject: (project: Omit<Project, "id">) => void;
+  updateProject: (id: string, project: Omit<Project, "id">) => void;
+  deleteProject: (id: string) => void;
+  addSkill: (skill: Omit<Skill, "id">) => void;
+  updateSkill: (id: string, skill: Omit<Skill, "id">) => void;
+  deleteSkill: (id: string) => void;
+  addExperience: (experience: Omit<Experience, "id">) => void;
+  updateExperience: (id: string, experience: Omit<Experience, "id">) => void;
+  deleteExperience: (id: string) => void;
+  addEducation: (education: Omit<Education, "id">) => void;
+  updateEducation: (id: string, education: Omit<Education, "id">) => void;
+  deleteEducation: (id: string) => void;
 }
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
-export const usePortfolio = () => {
-  const context = useContext(PortfolioContext);
-  if (!context) {
-    throw new Error('usePortfolio must be used within a PortfolioProvider');
-  }
-  return context;
-};
-
-interface PortfolioProviderProps {
-  children: ReactNode;
-}
-
-export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({ children }) => {
-  const [portfolioData, setPortfolioData] = useState<PortfolioData>(() => {
-    try {
-      const savedData = localStorage.getItem('portfolio_data');
-      if (savedData) {
-        const parsedData = JSON.parse(savedData);
-        return {
-          personalInfo: parsedData.personalInfo || defaultData.personalInfo,
-          projects: parsedData.projects || defaultData.projects,
-          skills: parsedData.skills || defaultData.skills,
-          experiences: parsedData.experiences || defaultData.experiences,
-          education: parsedData.education || defaultData.education,
-        };
-      }
-    } catch (error) {
-      console.error('Error loading portfolio data:', error);
-    }
-    return defaultData;
+export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [portfolioData, setPortfolioData] = useState<PortfolioData>({
+    ...mockPortfolioData,
+    experiences: experienceStorage.getAll()
   });
 
-  useEffect(() => {
-    try {
-      localStorage.setItem('portfolio_data', JSON.stringify(portfolioData));
-    } catch (error) {
-      console.error('Error saving portfolio data:', error);
-    }
-  }, [portfolioData]);
+  // Experience handlers
+  const addExperience = (experience: Omit<Experience, "id">) => {
+    const newExperience = experienceStorage.add(experience);
+    setPortfolioData(prev => ({
+      ...prev,
+      experiences: [...prev.experiences, newExperience]
+    }));
+  };
 
+  const updateExperience = (id: string, experience: Omit<Experience, "id">) => {
+    experienceStorage.update(id, experience);
+    setPortfolioData(prev => ({
+      ...prev,
+      experiences: prev.experiences.map(exp => 
+        exp.id === id ? { ...experience, id } : exp
+      )
+    }));
+  };
+
+  const deleteExperience = (id: string) => {
+    experienceStorage.delete(id);
+    setPortfolioData(prev => ({
+      ...prev,
+      experiences: prev.experiences.filter(exp => exp.id !== id)
+    }));
+  };
+
+  // Other handlers (projects, skills, education) can be added here...
   const updatePersonalInfo = (info: PersonalInfo) => {
     setPortfolioData(prev => ({ ...prev, personalInfo: info }));
   };
 
-  const updateProjects = (projects: Project[]) => {
-    setPortfolioData(prev => ({ ...prev, projects }));
+  const addProject = (project: Omit<Project, "id">) => {
+    const newProject = { ...project, id: `proj_${Date.now()}` };
+    setPortfolioData(prev => ({
+      ...prev,
+      projects: [...prev.projects, newProject]
+    }));
   };
 
-  const updateSkills = (skills: Skill[]) => {
-    setPortfolioData(prev => ({ ...prev, skills }));
+  const updateProject = (id: string, project: Omit<Project, "id">) => {
+    setPortfolioData(prev => ({
+      ...prev,
+      projects: prev.projects.map(p => p.id === id ? { ...project, id } : p)
+    }));
   };
 
-  const updateExperiences = (experiences: Experience[]) => {
-    setPortfolioData(prev => ({ ...prev, experiences }));
+  const deleteProject = (id: string) => {
+    setPortfolioData(prev => ({
+      ...prev,
+      projects: prev.projects.filter(p => p.id !== id)
+    }));
   };
 
-  const updateEducation = (education: Education[]) => {
-    setPortfolioData(prev => ({ ...prev, education }));
+  const addSkill = (skill: Omit<Skill, "id">) => {
+    const newSkill = { ...skill, id: `skill_${Date.now()}` };
+    setPortfolioData(prev => ({
+      ...prev,
+      skills: [...prev.skills, newSkill]
+    }));
+  };
+
+  const updateSkill = (id: string, skill: Omit<Skill, "id">) => {
+    setPortfolioData(prev => ({
+      ...prev,
+      skills: prev.skills.map(s => s.id === id ? { ...skill, id } : s)
+    }));
+  };
+
+  const deleteSkill = (id: string) => {
+    setPortfolioData(prev => ({
+      ...prev,
+      skills: prev.skills.filter(s => s.id !== id)
+    }));
+  };
+
+  const addEducation = (education: Omit<Education, "id">) => {
+    const newEducation = { ...education, id: `edu_${Date.now()}` };
+    setPortfolioData(prev => ({
+      ...prev,
+      education: [...prev.education, newEducation]
+    }));
+  };
+
+  const updateEducation = (id: string, education: Omit<Education, "id">) => {
+    setPortfolioData(prev => ({
+      ...prev,
+      education: prev.education.map(e => e.id === id ? { ...education, id } : e)
+    }));
+  };
+
+  const deleteEducation = (id: string) => {
+    setPortfolioData(prev => ({
+      ...prev,
+      education: prev.education.filter(e => e.id !== id)
+    }));
   };
 
   const value = {
     portfolioData,
     updatePersonalInfo,
-    updateProjects,
-    updateSkills,
-    updateExperiences,
+    addProject,
+    updateProject,
+    deleteProject,
+    addSkill,
+    updateSkill,
+    deleteSkill,
+    addExperience,
+    updateExperience,
+    deleteExperience,
+    addEducation,
     updateEducation,
+    deleteEducation
   };
 
   return (
@@ -95,4 +156,12 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({ children }
       {children}
     </PortfolioContext.Provider>
   );
+};
+
+export const usePortfolio = () => {
+  const context = useContext(PortfolioContext);
+  if (context === undefined) {
+    throw new Error('usePortfolio must be used within a PortfolioProvider');
+  }
+  return context;
 }; 
