@@ -12,11 +12,14 @@ import Skills from '@/components/Skills';
 import Projects from '@/components/Projects';
 import Contact from '@/components/Contact';
 import { Toaster } from '@/components/ui/toaster';
+import Index from '@/pages/Index';
+import AdminRoutes from '@/pages/AdminRoutes';
+import NotFound from '@/pages/NotFound';
+import './App.css';
 
 // Lazy load the admin section
 const AdminIndex = lazy(() => import('@/pages/admin/Index'));
 const AdminLogin = lazy(() => import('@/pages/admin/Login'));
-const TestPage = lazy(() => import('@/pages/TestPage'));
 
 function App() {
   return (
@@ -39,13 +42,6 @@ function App() {
               </Suspense>
             } />
             
-            {/* Test route */}
-            <Route path="/test" element={
-              <Suspense fallback={<div className="min-h-screen grid place-items-center bg-background"><p className="text-white font-tech">Loading test page...</p></div>}>
-                <TestPage />
-              </Suspense>
-            } />
-            
             {/* Public routes */}
             <Route path="/" element={
               <>
@@ -59,6 +55,7 @@ function App() {
                 <Footer />
               </>
             } />
+            <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />
         </Router>
