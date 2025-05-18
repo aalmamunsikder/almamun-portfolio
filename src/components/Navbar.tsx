@@ -61,16 +61,16 @@ const Navbar = () => {
   return (
     <nav
       className={cn(
-        "fixed w-full top-0 z-50 transition-all duration-300 px-6 md:px-12",
+        "fixed w-full top-0 z-50 transition-all duration-300 px-4 sm:px-6 md:px-12",
         scrolled
-          ? "py-3 bg-background/90 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/10"
-          : "py-5 bg-transparent"
+          ? "py-2 sm:py-3 bg-background/90 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/10"
+          : "py-3 sm:py-5 bg-transparent"
       )}
     >
       <div className="container max-w-7xl mx-auto flex justify-between items-center">
         <a 
           href="#" 
-          className="text-2xl md:text-3xl font-bold font-tech relative group flex items-center"
+          className="text-xl sm:text-2xl md:text-3xl font-bold font-tech relative group flex items-center"
         >
           <span className="text-white group-hover:opacity-90 transition-opacity">
             {personalInfo?.name?.split(' ')[0] || 'Port'}
@@ -81,7 +81,7 @@ const Navbar = () => {
           <span className="text-theme-purple">.</span>
           
           {/* Decorative dot animation */}
-          <span className="absolute -bottom-1 left-0 w-2 h-2 bg-theme-purple rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:translate-x-full"></span>
+          <span className="absolute -bottom-1 left-0 w-1.5 sm:w-2 h-1.5 sm:h-2 bg-theme-purple rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:translate-x-full"></span>
         </a>
 
         {/* Desktop menu */}
@@ -118,49 +118,49 @@ const Navbar = () => {
         {/* Mobile menu button */}
         <Button
           variant="ghost"
-          className="md:hidden p-2 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10"
+          className="md:hidden p-1.5 sm:p-2 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10"
           onClick={toggleMenu}
           aria-label="Toggle menu"
         >
-          {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {isMenuOpen ? <X className="h-4 w-4 sm:h-5 sm:w-5" /> : <Menu className="h-4 w-4 sm:h-5 sm:w-5" />}
         </Button>
       </div>
 
       {/* Mobile menu */}
       <div
         className={cn(
-          "fixed top-[72px] inset-x-0 bg-background/95 backdrop-blur-xl border-b border-white/10 md:hidden transition-all duration-300 overflow-hidden",
-          isMenuOpen ? "max-h-[500px] py-6" : "max-h-0 py-0"
+          "fixed top-[56px] sm:top-[72px] inset-x-0 bg-background/95 backdrop-blur-xl border-b border-white/10 md:hidden transition-all duration-300 overflow-hidden",
+          isMenuOpen ? "max-h-[500px] py-4 sm:py-6" : "max-h-0 py-0"
         )}
       >
-        <div className="container max-w-7xl mx-auto flex flex-col gap-3 px-6">
+        <div className="container max-w-7xl mx-auto flex flex-col gap-2 sm:gap-3 px-4 sm:px-6">
           {navItems.map((item) => (
             <a
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center justify-between py-3 px-4 rounded-xl transition-all duration-300 font-tech",
+                "flex items-center justify-between py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition-all duration-300 font-tech text-sm sm:text-base",
                 activeSection === item.href.substring(1)
                   ? "glass-morphism text-white border-white/20"
                   : "text-white/80 hover:text-white bg-white/5 backdrop-blur-sm border border-white/5 hover:border-white/10"
               )}
               onClick={closeMenu}
             >
-              <div className="flex items-center gap-3">
-                <item.icon className="h-5 w-5" />
+              <div className="flex items-center gap-2 sm:gap-3">
+                <item.icon className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span>{item.title}</span>
               </div>
               {activeSection === item.href.substring(1) && (
-                <ChevronDown className="h-4 w-4 text-theme-purple" />
+                <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4 text-theme-purple" />
               )}
             </a>
           ))}
           <Button 
             asChild 
-            className="mt-4 bg-gradient-to-r from-theme-purple to-blue-500 hover:from-theme-purple/90 hover:to-blue-500/90 text-white w-full rounded-xl py-6 font-tech"
+            className="mt-3 sm:mt-4 bg-gradient-to-r from-theme-purple to-blue-500 hover:from-theme-purple/90 hover:to-blue-500/90 text-white w-full rounded-xl py-2.5 sm:py-6 font-tech text-sm sm:text-base"
           >
             <a href="#contact" onClick={closeMenu} className="flex items-center justify-center gap-2">
-              <Mail className="h-5 w-5" />
+              <Mail className="h-4 w-4 sm:h-5 sm:w-5" />
               {personalInfo.contactInfo.availableForWork ? 'Hire Me' : 'Contact Me'}
             </a>
           </Button>
