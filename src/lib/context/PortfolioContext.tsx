@@ -41,108 +41,150 @@ interface PortfolioContextType {
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
 export function PortfolioProvider({ children }: { children: React.ReactNode }) {
+  console.log('[PortfolioContext] Initializing provider');
+  
   const [adminState, setAdminState] = useState(isAdmin());
-  const [portfolioData, setPortfolioData] = useState({
-    personalInfo: personalInfoStorage.get(),
-    projects: projectStorage.getAll(),
-    skills: skillStorage.getAll(),
-    experiences: experienceStorage.getAll(),
-    education: educationStorage.getAll(),
-  });
-
-  // Function to refresh all data
-  const refreshData = () => {
-    setPortfolioData({
+  const [portfolioData, setPortfolioData] = useState(() => {
+    console.log('[PortfolioContext] Loading initial data');
+    const data = {
       personalInfo: personalInfoStorage.get(),
       projects: projectStorage.getAll(),
       skills: skillStorage.getAll(),
       experiences: experienceStorage.getAll(),
       education: educationStorage.getAll(),
-    });
+    };
+    console.log('[PortfolioContext] Initial data loaded:', data);
+    return data;
+  });
+
+  // Function to refresh all data
+  const refreshData = () => {
+    console.log('[PortfolioContext] Refreshing data');
+    const newData = {
+      personalInfo: personalInfoStorage.get(),
+      projects: projectStorage.getAll(),
+      skills: skillStorage.getAll(),
+      experiences: experienceStorage.getAll(),
+      education: educationStorage.getAll(),
+    };
+    console.log('[PortfolioContext] New data:', newData);
+    setPortfolioData(newData);
   };
 
   // Listen for storage events
   useEffect(() => {
+    console.log('[PortfolioContext] Setting up storage event listener');
+    
     const handleStorageChange = (event: StorageEvent) => {
+      console.log('[PortfolioContext] Storage event:', event.key);
       if (event.key && event.key.startsWith('portfolio_')) {
         refreshData();
       }
     };
 
-    // Listen for storage events
     window.addEventListener('storage', handleStorageChange);
-
+    
     // Initial data load
     refreshData();
 
     // Set up periodic refresh as a backup
-    const intervalId = setInterval(refreshData, 1000);
+    const intervalId = setInterval(() => {
+      console.log('[PortfolioContext] Periodic refresh');
+      refreshData();
+    }, 1000);
 
     return () => {
+      console.log('[PortfolioContext] Cleaning up event listeners');
       window.removeEventListener('storage', handleStorageChange);
       clearInterval(intervalId);
     };
   }, []);
 
   const login = (password: string): boolean => {
-    // For development, use a default password if environment variable is not set
+    console.log('[PortfolioContext] Attempting login');
     const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
     const isValid = password === adminPassword;
     
     if (isValid) {
+      console.log('[PortfolioContext] Login successful');
       setAdmin(true);
       setAdminState(true);
+      refreshData(); // Refresh data after successful login
+    } else {
+      console.log('[PortfolioContext] Login failed');
     }
     return isValid;
   };
 
   const logout = () => {
+    console.log('[PortfolioContext] Logging out');
     setAdmin(false);
     setAdminState(false);
+    refreshData(); // Refresh data after logout
   };
 
   const updatePersonalInfo = (info: PersonalInfo) => {
     try {
+      console.log('[PortfolioContext] Updating personal info:', info);
       personalInfoStorage.save(info);
-      setPortfolioData(prev => ({ ...prev, personalInfo: info }));
+      setPortfolioData(prev => {
+        const newData = { ...prev, personalInfo: info };
+        console.log('[PortfolioContext] Updated portfolio data:', newData);
+        return newData;
+      });
     } catch (error) {
-      console.error('Error updating personal info:', error);
+      console.error('[PortfolioContext] Error updating personal info:', error);
     }
   };
 
   const addProject = (project: Omit<Project, "id">) => {
     try {
+      console.log('[PortfolioContext] Adding project:', project);
       const newProject = projectStorage.add(project);
-      setPortfolioData(prev => ({
-        ...prev,
-        projects: [...prev.projects, newProject]
-      }));
+      setPortfolioData(prev => {
+        const newData = {
+          ...prev,
+          projects: [...prev.projects, newProject]
+        };
+        console.log('[PortfolioContext] Updated portfolio data:', newData);
+        return newData;
+      });
     } catch (error) {
-      console.error('Error adding project:', error);
+      console.error('[PortfolioContext] Error adding project:', error);
     }
   };
 
   const updateProject = (id: string, project: Omit<Project, "id">) => {
     try {
+      console.log('[PortfolioContext] Updating project:', id, project);
       projectStorage.update(id, project);
-      setPortfolioData(prev => ({
-        ...prev,
-        projects: prev.projects.map(p => p.id === id ? { ...project, id } : p)
-      }));
+      setPortfolioData(prev => {
+        const newData = {
+          ...prev,
+          projects: prev.projects.map(p => p.id === id ? { ...project, id } : p)
+        };
+        console.log('[PortfolioContext] Updated portfolio data:', newData);
+        return newData;
+      });
     } catch (error) {
-      console.error('Error updating project:', error);
+      console.error('[PortfolioContext] Error updating project:', error);
     }
   };
 
   const deleteProject = (id: string) => {
     try {
+      console.log('[PortfolioContext] Deleting project:', id);
       projectStorage.delete(id);
-      setPortfolioData(prev => ({
-        ...prev,
-        projects: prev.projects.filter(p => p.id !== id)
-      }));
+      setPortfolioData(prev => {
+        const newData = {
+          ...prev,
+          projects: prev.projects.filter(p => p.id !== id)
+        };
+        console.log('[PortfolioContext] Updated portfolio data:', newData);
+        return newData;
+      });
     } catch (error) {
-      console.error('Error deleting project:', error);
+      console.error('[PortfolioContext] Error deleting project:', error);
     }
   };
 

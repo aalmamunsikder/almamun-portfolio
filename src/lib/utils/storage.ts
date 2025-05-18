@@ -18,11 +18,16 @@ const globalState: {
 
 // Helper to safely parse JSON
 const safeJSONParse = <T>(str: string | null, fallback: T): T => {
-  if (!str) return fallback;
+  if (!str) {
+    console.log('[Storage] No data found, using fallback:', fallback);
+    return fallback;
+  }
   try {
-    return JSON.parse(str) as T;
+    const parsed = JSON.parse(str) as T;
+    console.log('[Storage] Successfully parsed data:', parsed);
+    return parsed;
   } catch (e) {
-    console.error('Error parsing JSON:', e);
+    console.error('[Storage] Error parsing JSON:', e);
     return fallback;
   }
 };
@@ -31,7 +36,9 @@ const safeJSONParse = <T>(str: string | null, fallback: T): T => {
 const safeJSONSave = (key: string, data: any): void => {
   try {
     if (typeof window !== 'undefined') {
+      console.log('[Storage] Saving data for key:', key, data);
       localStorage.setItem(key, JSON.stringify(data));
+      console.log('[Storage] Data saved successfully');
       // Update global state
       globalState[key] = data;
       // Dispatch storage event to notify other components
@@ -41,7 +48,7 @@ const safeJSONSave = (key: string, data: any): void => {
       }));
     }
   } catch (e) {
-    console.error('Error saving to localStorage:', e);
+    console.error('[Storage] Error saving to localStorage:', e);
   }
 };
 
@@ -69,30 +76,50 @@ const getData = <T>(key: string, fallback: T): T => {
 // Check if user is admin
 export const isAdmin = (): boolean => {
   if (typeof window === 'undefined') return false;
-  const adminState = getData<string>(STORAGE_KEYS.IS_ADMIN, 'false');
-  return adminState === 'true';
+  const adminState = localStorage.getItem(STORAGE_KEYS.IS_ADMIN) === 'true';
+  console.log('[Storage] Admin state:', adminState);
+  return adminState;
 };
 
 // Set admin status
 export const setAdmin = (status: boolean): void => {
   if (typeof window === 'undefined') return;
-  safeJSONSave(STORAGE_KEYS.IS_ADMIN, status.toString());
+  console.log('[Storage] Setting admin status:', status);
+  localStorage.setItem(STORAGE_KEYS.IS_ADMIN, status.toString());
 };
 
 // Generic storage factory
 const createStorage = <T extends { id: string }>(key: keyof typeof STORAGE_KEYS, mockData: T[]) => {
   const storage = {
     getAll: (): T[] => {
-      return getData(STORAGE_KEYS[key], mockData);
+      console.log(`[Storage] Getting all data for ${key}`);
+      if (typeof window === 'undefined') {
+        console.log('[Storage] Server-side, returning mock data');
+        return mockData;
+      }
+      const data = safeJSONParse(localStorage.getItem(STORAGE_KEYS[key]), mockData);
+      console.log(`[Storage] Retrieved data for ${key}:`, data);
+      return data;
     },
 
     save: (items: T[]): void => {
-      if (typeof window === 'undefined' || !isAdmin()) return;
+      if (typeof window === 'undefined') {
+        console.log('[Storage] Server-side, skipping save');
+        return;
+      }
+      if (!isAdmin()) {
+        console.log('[Storage] Not admin, skipping save');
+        return;
+      }
+      console.log(`[Storage] Saving items for ${key}:`, items);
       safeJSONSave(STORAGE_KEYS[key], items);
     },
 
     add: (item: Omit<T, "id">): T => {
-      if (!isAdmin()) throw new Error('Unauthorized');
+      if (!isAdmin()) {
+        console.log('[Storage] Not admin, cannot add item');
+        throw new Error('Unauthorized');
+      }
       
       const items = storage.getAll();
       const newItem = {
@@ -100,28 +127,39 @@ const createStorage = <T extends { id: string }>(key: keyof typeof STORAGE_KEYS,
         id: `${key}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
       } as T;
       
+      console.log(`[Storage] Adding new item to ${key}:`, newItem);
       items.push(newItem);
       storage.save(items);
       return newItem;
     },
 
     update: (id: string, item: Omit<T, "id">): void => {
-      if (!isAdmin()) throw new Error('Unauthorized');
+      if (!isAdmin()) {
+        console.log('[Storage] Not admin, cannot update item');
+        throw new Error('Unauthorized');
+      }
       
       const items = storage.getAll();
       const index = items.findIndex(i => i.id === id);
       
       if (index !== -1) {
         items[index] = { ...item, id } as T;
+        console.log(`[Storage] Updating item in ${key}:`, items[index]);
         storage.save(items);
+      } else {
+        console.log(`[Storage] Item with id ${id} not found in ${key}`);
       }
     },
 
     delete: (id: string): void => {
-      if (!isAdmin()) throw new Error('Unauthorized');
+      if (!isAdmin()) {
+        console.log('[Storage] Not admin, cannot delete item');
+        throw new Error('Unauthorized');
+      }
       
       const items = storage.getAll();
       const filtered = items.filter(i => i.id !== id);
+      console.log(`[Storage] Deleting item from ${key}, items remaining:`, filtered.length);
       storage.save(filtered);
     }
   };
@@ -132,11 +170,29 @@ const createStorage = <T extends { id: string }>(key: keyof typeof STORAGE_KEYS,
 // Personal Info storage
 export const personalInfoStorage = {
   get: (): PersonalInfo => {
-    return getData(STORAGE_KEYS.PERSONAL_INFO, mockPortfolioData.personalInfo);
+    console.log('[Storage] Getting personal info');
+    if (typeof window === 'undefined') {
+      console.log('[Storage] Server-side, returning mock personal info');
+      return mockPortfolioData.personalInfo;
+    }
+    const data = safeJSONParse(
+      localStorage.getItem(STORAGE_KEYS.PERSONAL_INFO),
+      mockPortfolioData.personalInfo
+    );
+    console.log('[Storage] Retrieved personal info:', data);
+    return data;
   },
 
   save: (info: PersonalInfo): void => {
-    if (typeof window === 'undefined' || !isAdmin()) return;
+    if (typeof window === 'undefined') {
+      console.log('[Storage] Server-side, skipping personal info save');
+      return;
+    }
+    if (!isAdmin()) {
+      console.log('[Storage] Not admin, skipping personal info save');
+      return;
+    }
+    console.log('[Storage] Saving personal info:', info);
     safeJSONSave(STORAGE_KEYS.PERSONAL_INFO, info);
   }
 };
