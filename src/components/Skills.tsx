@@ -1,11 +1,24 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Layers, Code2, Database, Wrench } from "lucide-react";
+import { Layers, Code2, Database, Wrench, ChevronDown, ChevronUp } from "lucide-react";
 import { usePortfolio } from "@/lib/context/PortfolioContext";
 
 const Skills = () => {
   const { portfolioData } = usePortfolio();
   const [activeFilter, setActiveFilter] = useState<string>("All");
+  // Track expanded state for each category
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
+  
+  // Number of skills to show initially on mobile
+  const INITIAL_SKILLS_TO_SHOW = 4;
+  
+  // Toggle expanded state for a category
+  const toggleCategoryExpansion = (category: string) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [category]: !prev[category]
+    }));
+  };
   
   // Extract unique categories from skills for filter buttons
   const categories = ["All", ...Array.from(new Set(portfolioData.skills.map(skill => skill.category)))];
@@ -24,6 +37,12 @@ const Skills = () => {
         return <Code2 className="h-6 w-6 text-blue-400" />;
       case "Backend":
         return <Database className="h-6 w-6 text-green-400" />;
+      case "Mobile":
+        return <Code2 className="h-6 w-6 text-orange-400" />;
+      case "DevOps":
+        return <Wrench className="h-6 w-6 text-green-400" />;
+      case "Database":
+        return <Database className="h-6 w-6 text-blue-400" />;
       case "Tools":
         return <Wrench className="h-6 w-6 text-amber-400" />;
       default:
@@ -40,6 +59,12 @@ const Skills = () => {
         return "from-blue-500/20 to-cyan-500/20";
       case "Backend":
         return "from-green-500/20 to-emerald-500/20";
+      case "Mobile":
+        return "from-orange-500/20 to-red-500/20";
+      case "DevOps":
+        return "from-green-500/20 to-teal-500/20";
+      case "Database":
+        return "from-blue-500/20 to-indigo-500/20";
       case "Tools":
         return "from-amber-500/20 to-orange-500/20";
       default:
@@ -167,12 +192,12 @@ const Skills = () => {
                       </svg>
                     </div>
                     
-                    <div className="flex items-start gap-4 sm:gap-6 mb-6 sm:mb-8">
+                    <div className="flex items-start gap-4 sm:gap-6 mb-4 sm:mb-6">
                       <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
                         {skill.icon}
                       </div>
                       
-                      <div>
+                      <div className="flex-1">
                         <h3 className="text-xl sm:text-2xl md:text-3xl font-tech mb-2">{skill.category}</h3>
                         <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden mt-2">
                           <div 
@@ -187,14 +212,35 @@ const Skills = () => {
                       </div>
                     </div>
                     
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
-                      {skill.items.map((item) => (
-                        <div key={item} className="flex items-center py-1.5 sm:py-2 group/item">
-                          <div className="w-1.5 h-1.5 rounded-full bg-theme-purple mr-2 sm:mr-3 group-hover/item:scale-125 transition-transform"></div>
-                          <p className="text-white/80 font-tech text-sm sm:text-base md:text-lg group-hover/item:text-white transition-colors">{item}</p>
+                    {/* Mobile optimized skills grid with show more button */}
+                    <div className="grid grid-cols-2 gap-x-2 gap-y-0.5">
+                      {skill.items.slice(0, expandedCategories[skill.category] ? skill.items.length : INITIAL_SKILLS_TO_SHOW).map((item) => (
+                        <div key={item} className="flex items-center py-1 group/item">
+                          <div className="min-w-[5px] w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-theme-purple mr-1.5 sm:mr-2 md:mr-3 group-hover/item:scale-125 transition-transform"></div>
+                          <p className="text-white/80 font-tech text-[10px] xs:text-xs sm:text-sm md:text-base truncate group-hover/item:text-white transition-colors">{item}</p>
                         </div>
                       ))}
                     </div>
+                    
+                    {/* Show more/less button for mobile */}
+                    {skill.items.length > INITIAL_SKILLS_TO_SHOW && (
+                      <button
+                        onClick={() => toggleCategoryExpansion(skill.category)}
+                        className="w-full mt-2 flex items-center justify-center gap-1 py-1 px-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-xs font-tech transition-colors"
+                      >
+                        {expandedCategories[skill.category] ? (
+                          <>
+                            <span>Show less</span>
+                            <ChevronUp className="h-3 w-3" />
+                          </>
+                        ) : (
+                          <>
+                            <span>Show more ({skill.items.length - INITIAL_SKILLS_TO_SHOW})</span>
+                            <ChevronDown className="h-3 w-3" />
+                          </>
+                        )}
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
