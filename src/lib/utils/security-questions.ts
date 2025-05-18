@@ -14,7 +14,7 @@ export const SECURITY_QUESTIONS: SecurityQuestion[] = [
 ];
 
 // Default security questions and answers for development/testing
-const DEFAULT_SECURITY_QUESTIONS = {
+export const DEFAULT_SECURITY_QUESTIONS = {
   questions: ['birth', 'pet', 'school'],
   answers: [
     { questionId: 'birth', answer: btoa('dhaka'.toLowerCase().trim()) },
@@ -53,11 +53,20 @@ export const getSecurityQuestions = (): { questions: string[], answers: Security
   try {
     const data = localStorage.getItem('securityQuestions');
     if (!data) {
-      return { questions: [], answers: [] };
+      // Return default questions if none exist
+      return DEFAULT_SECURITY_QUESTIONS;
     }
-    return JSON.parse(data);
+    const parsed = JSON.parse(data);
+    // Return default questions if parsed data is invalid
+    if (!parsed.questions || !parsed.answers || 
+        !Array.isArray(parsed.questions) || !Array.isArray(parsed.answers) ||
+        parsed.questions.length < 3 || parsed.answers.length < 3) {
+      return DEFAULT_SECURITY_QUESTIONS;
+    }
+    return parsed;
   } catch {
-    return { questions: [], answers: [] };
+    // Return default questions on any error
+    return DEFAULT_SECURITY_QUESTIONS;
   }
 };
 
@@ -67,8 +76,17 @@ export const validateSecurityAnswer = (questionId: string, answer: string): bool
     const storedAnswer = answers.find(a => a.questionId === questionId);
     if (!storedAnswer) return false;
     
-    return btoa(answer.toLowerCase().trim()) === storedAnswer.answer;
-  } catch {
+    const encodedAnswer = btoa(answer.toLowerCase().trim());
+    console.log('Validating answer:', {
+      questionId,
+      providedAnswer: encodedAnswer,
+      storedAnswer: storedAnswer.answer,
+      isValid: encodedAnswer === storedAnswer.answer
+    });
+    
+    return encodedAnswer === storedAnswer.answer;
+  } catch (error) {
+    console.error('Error validating security answer:', error);
     return false;
   }
 };
