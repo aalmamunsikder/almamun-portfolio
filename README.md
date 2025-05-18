@@ -1,61 +1,52 @@
-# Eclipse Client Catcher
+# Portfolio Website
 
-A secure admin panel interface with advanced security features and session management.
+A modern, responsive portfolio website built with Next.js and Tailwind CSS.
 
 ## Features
 
-- 🔐 Secure password management with strong validation
-- 🛡️ Security questions for account recovery
-- 📱 Active session monitoring and management
-- 📊 Login history tracking
-- 🎨 Modern glass-morphism UI design
-- 🌙 Dark mode interface
-- 🔄 Real-time session updates
+- Modern and responsive design
+- Sections for personal info, projects, skills, experience, and education
+- Beautiful animations and transitions
+- Dark mode support
+- SEO optimized
+- Fast loading and performance optimized
 
 ## Tech Stack
 
-- React
+- Next.js
 - TypeScript
-- TailwindCSS
-- Lucide Icons
-- Shadcn/ui Components
+- Tailwind CSS
+- Framer Motion
+- React Icons
 
 ## Getting Started
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/eclipse-client-catcher.git
-cd eclipse-client-catcher
-```
-
+1. Clone the repository
 2. Install dependencies:
-```bash
-npm install
-# or
-yarn install
+   ```bash
+   npm install
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## Project Structure
+
+```
+src/
+├── app/             # Next.js app directory
+├── components/      # React components
+├── lib/            # Utilities and helpers
+├── types/          # TypeScript types
+└── styles/         # Global styles
 ```
 
-3. Start the development server:
-```bash
-npm run dev
-# or
-yarn dev
-```
+## Customization
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## Security Features
-
-- Password strength validation
-- Security questions management
-- Session tracking and management
-- Login attempt monitoring
-- Secure password reset flow
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+Edit the mock data in `src/lib/mockData.ts` to customize your portfolio content.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT

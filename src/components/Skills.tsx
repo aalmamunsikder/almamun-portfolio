@@ -123,7 +123,7 @@ const Skills = () => {
               No Skills Added
             </h3>
             <p className="text-white/70 text-lg font-tech">
-              Add skills in the admin panel to showcase your technical expertise.
+              No skills added yet.
             </p>
           </div>
         ) : (

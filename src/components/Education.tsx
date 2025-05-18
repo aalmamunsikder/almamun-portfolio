@@ -39,7 +39,7 @@ const Education = () => {
               No Education Records
             </h3>
             <p className="text-white/70 text-lg font-tech">
-              Add education details in the admin panel to showcase your academic background.
+              No education entries yet.
             </p>
           </div>
         ) : (
