@@ -74,61 +74,61 @@ const Projects = () => {
       
       <div className="container max-w-7xl mx-auto px-6 md:px-12">
         {/* Section header with glass effect */}
-        <div className="relative mb-20">
+        <div className="relative mb-10 sm:mb-20">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-theme-purple/10 rounded-3xl blur-3xl -z-10"></div>
-          <div className="glass-morphism rounded-3xl p-12 text-center border border-white/10">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-theme-purple/20 rounded-2xl mb-8">
-              <FolderGit2 className="w-8 h-8 text-theme-purple" />
-        </div>
+          <div className="glass-morphism rounded-3xl p-6 sm:p-8 md:p-12 text-center border border-white/10">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-theme-purple/20 rounded-2xl mb-6 sm:mb-8">
+              <FolderGit2 className="w-6 h-6 sm:w-8 sm:h-8 text-theme-purple" />
+            </div>
 
-            <h2 className="text-5xl md:text-6xl font-tech mb-6 text-gradient">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-tech mb-4 sm:mb-6 text-gradient">
               Featured Projects
             </h2>
             
-            <p className="text-xl md:text-2xl text-white/70 max-w-3xl mx-auto font-tech">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/70 max-w-3xl mx-auto font-tech">
               Explore my latest work showcasing creative solutions and technical expertise
             </p>
             
             {/* Filter pills with scroll buttons */}
-            <div className="relative mt-10 max-w-4xl mx-auto">
+            <div className="relative mt-6 sm:mt-10 max-w-4xl mx-auto">
               {isScrollNeeded && (
                 <>
                   <button 
                     onClick={() => scrollFilters('left')}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-8 h-8 rounded-full bg-theme-purple/30 backdrop-blur-sm flex items-center justify-center border border-white/10"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 sm:-translate-x-4 z-10 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-theme-purple/30 backdrop-blur-sm flex items-center justify-center border border-white/10"
                     aria-label="Scroll filters left"
                   >
-                    <ChevronLeft className="h-5 w-5 text-white" />
+                    <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                   </button>
                   <button 
                     onClick={() => scrollFilters('right')}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-8 h-8 rounded-full bg-theme-purple/30 backdrop-blur-sm flex items-center justify-center border border-white/10"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 sm:translate-x-4 z-10 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-theme-purple/30 backdrop-blur-sm flex items-center justify-center border border-white/10"
                     aria-label="Scroll filters right"
                   >
-                    <ChevronRight className="h-5 w-5 text-white" />
+                    <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                   </button>
                 </>
               )}
               
               <div 
                 ref={filtersRef}
-                className="flex gap-3 overflow-x-auto py-2 no-scrollbar justify-start md:justify-center"
+                className="flex gap-2 sm:gap-3 overflow-x-auto py-2 no-scrollbar justify-start md:justify-center"
               >
-          {filters.map((filter) => (
-            <Button
-              key={filter}
-              variant={activeFilter === filter ? "default" : "outline"}
-              className={cn(
-                activeFilter === filter 
+                {filters.map((filter) => (
+                  <Button
+                    key={filter}
+                    variant={activeFilter === filter ? "default" : "outline"}
+                    className={cn(
+                      activeFilter === filter 
                         ? "bg-theme-purple hover:bg-theme-purple/90 text-white" 
                         : "bg-white/5 border-white/10 hover:bg-white/10",
-                      "capitalize rounded-full px-6 text-lg font-tech whitespace-nowrap flex-shrink-0"
-              )}
-              onClick={() => setActiveFilter(filter)}
-            >
-              {filter}
-            </Button>
-          ))}
+                        "capitalize rounded-full px-3 sm:px-6 py-1 text-xs sm:text-sm md:text-lg font-tech whitespace-nowrap flex-shrink-0"
+                    )}
+                    onClick={() => setActiveFilter(filter)}
+                  >
+                    {filter}
+                  </Button>
+                ))}
               </div>
             </div>
           </div>
@@ -136,10 +136,10 @@ const Projects = () => {
 
         {/* Projects grid with advanced hover effects */}
         {filteredProjects.length > 0 ? (
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => (
-            <div 
-              key={project.id} 
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-8">
+            {filteredProjects.map((project, index) => (
+              <div 
+                key={project.id} 
                 className="group relative"
                 onMouseEnter={() => setHoveredProject(project.id)}
                 onMouseLeave={() => setHoveredProject(null)}
@@ -156,10 +156,10 @@ const Projects = () => {
                 
                 <div className="glass-morphism rounded-2xl border border-white/10 h-full overflow-hidden transition-all duration-500 group-hover:shadow-xl group-hover:shadow-theme-purple/20 group-hover:border-white/20">
                   {/* Image container with improved overlay */}
-              <div className="relative aspect-[16/9] overflow-hidden">
-                <img 
+                  <div className="relative aspect-[16/9] overflow-hidden">
+                    <img 
                       src={project.imageUrl} 
-                  alt={project.title} 
+                      alt={project.title} 
                       className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = "https://placehold.co/600x400?text=No+Image";
@@ -168,8 +168,8 @@ const Projects = () => {
                     
                     {/* Featured badge */}
                     {project.featured && (
-                      <div className="absolute top-4 left-4 py-1 px-3 rounded-full bg-theme-purple/70 backdrop-blur-md text-xs font-tech text-white/90 border border-theme-purple/30 flex items-center gap-1 z-10">
-                        <span className="h-1.5 w-1.5 bg-white rounded-full animate-pulse"></span>
+                      <div className="absolute top-2 sm:top-4 left-2 sm:left-4 py-1 px-2 sm:px-3 rounded-full bg-theme-purple/70 backdrop-blur-md text-[10px] sm:text-xs font-tech text-white/90 border border-theme-purple/30 flex items-center gap-1 z-10">
+                        <span className="h-1 w-1 sm:h-1.5 sm:w-1.5 bg-white rounded-full animate-pulse"></span>
                         Featured
                       </div>
                     )}
@@ -178,110 +178,112 @@ const Projects = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent opacity-95 transition-opacity duration-300 group-hover:opacity-90"></div>
                     
                     {/* Enhanced preview buttons with labels */}
-                    <div className="absolute top-4 right-4 flex gap-2 z-10">
+                    <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-1 sm:gap-2 z-10">
                       {project.liveUrl && (
                         <a 
                           href={project.liveUrl} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 py-1 px-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-colors group-hover:opacity-100 opacity-0 transition-opacity duration-300"
+                          className="flex items-center gap-1 sm:gap-2 py-1 px-2 sm:px-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-colors group-hover:opacity-100 opacity-0 transition-opacity duration-300"
                         >
-                          <Eye className="h-4 w-4 text-white" />
-                          <span className="text-xs font-tech">Live Demo</span>
+                          <Eye className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+                          <span className="text-[10px] sm:text-xs font-tech">Live Demo</span>
                         </a>
                       )}
                       {project.githubUrl && (
-                        <a 
-                          href={project.githubUrl} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 py-1 px-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-colors group-hover:opacity-100 opacity-0 transition-opacity duration-300"
+                        <Button 
+                          asChild 
+                          variant="outline" 
+                          className="rounded-xl bg-white/5 hover:bg-white/10 border-white/10 text-white flex-1 group/button px-2 sm:px-4"
                         >
-                          <Code2 className="h-4 w-4 text-white" />
-                          <span className="text-xs font-tech">Code</span>
-                        </a>
+                          <a 
+                            href={project.githubUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-1 sm:gap-2 py-3 sm:py-5"
+                          >
+                            <span className="font-tech text-xs sm:text-sm">View Code</span>
+                            <Github className="h-3 w-3 sm:h-4 sm:w-4" />
+                          </a>
+                        </Button>
                       )}
                     </div>
                     
                     {/* Title overlay with improved layout */}
-                    <div className="absolute bottom-0 left-0 p-6 w-full">
-                      <h3 className="text-2xl font-tech text-white mb-2 group-hover:text-gradient transition-all duration-300 transform group-hover:-translate-y-1">
+                    <div className="absolute bottom-0 left-0 p-4 sm:p-6 w-full">
+                      <h3 className="text-xl sm:text-2xl font-tech text-white mb-2 group-hover:text-gradient transition-all duration-300 transform group-hover:-translate-y-1">
                         {project.title}
                       </h3>
                       
-                      <div className="flex flex-wrap gap-2 mb-4">
+                      <div className="flex flex-wrap gap-1 sm:gap-2 mb-3 sm:mb-4">
                         {project.tags.map((tag, index) => (
-                      <span 
+                          <span 
                             key={`${project.id}-${index}`} 
-                            className="text-xs py-1 px-3 rounded-full backdrop-blur-md bg-white/10 border border-white/10 font-tech text-white/80"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                            className="text-[10px] sm:text-xs py-1 px-2 sm:px-3 rounded-full backdrop-blur-md bg-white/10 border border-white/10 font-tech text-white/80"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-              
+                  
                   {/* Description and links with improved layout */}
-                  <div className="p-6 pt-2">
-                    <p className="text-white/70 text-base mb-6 font-tech line-clamp-3 hover:line-clamp-none transition-all duration-300">
+                  <div className="p-4 sm:p-6 pt-2">
+                    <p className="text-white/70 text-sm sm:text-base mb-4 sm:mb-6 font-tech line-clamp-3 hover:line-clamp-none transition-all duration-300">
                       {project.description}
                     </p>
                     
-                    <div className="flex gap-3">
+                    <div className="flex gap-2 sm:gap-3">
                       {project.liveUrl && (
                         <Button 
                           asChild 
-                          className="rounded-xl bg-gradient-to-r from-theme-purple/20 to-blue-500/20 hover:from-theme-purple/30 hover:to-blue-500/30 text-white border border-theme-purple/30 flex-1 group/button"
+                          className="rounded-xl bg-gradient-to-r from-theme-purple/20 to-blue-500/20 hover:from-theme-purple/30 hover:to-blue-500/30 text-white border border-theme-purple/30 flex-1 group/button px-2 sm:px-4"
                         >
-                    <a 
-                      href={project.liveUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2 py-5"
-                    >
-                            <span className="font-tech text-sm">View Live Demo</span>
-                            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover/button:translate-x-1 group-hover/button:-translate-y-1" />
-                    </a>
-                  </Button>
+                          <a 
+                            href={project.liveUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-1 sm:gap-2 py-3 sm:py-5"
+                          >
+                            <span className="font-tech text-xs sm:text-sm">View Live Demo</span>
+                            <ArrowUpRight className="h-3 w-3 sm:h-4 sm:w-4 transition-transform duration-300 group-hover/button:translate-x-1 group-hover/button:-translate-y-1" />
+                          </a>
+                        </Button>
                       )}
                       
                       {project.githubUrl && (
                         <Button 
                           asChild 
                           variant="outline" 
-                          className="rounded-xl bg-white/5 hover:bg-white/10 border-white/10 flex-1"
+                          className="rounded-xl bg-white/5 hover:bg-white/10 border-white/10 text-white flex-1 group/button px-2 sm:px-4"
                         >
-                    <a 
-                      href={project.githubUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2 py-5"
-                    >
-                      <Github className="h-4 w-4" />
-                            <span className="font-tech text-sm">Source Code</span>
-                    </a>
-                  </Button>
+                          <a 
+                            href={project.githubUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-1 sm:gap-2 py-3 sm:py-5"
+                          >
+                            <span className="font-tech text-xs sm:text-sm">View Code</span>
+                            <Github className="h-3 w-3 sm:h-4 sm:w-4" />
+                          </a>
+                        </Button>
                       )}
                     </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
         ) : (
-          <div className="text-center py-20 glass-morphism rounded-2xl border border-white/10">
-            <FolderGit2 className="w-16 h-16 text-white/20 mx-auto mb-4" />
-            <h3 className="text-2xl font-tech text-white mb-2">No projects found</h3>
-            <p className="text-white/50 text-lg font-tech mb-6">No projects match the selected filter.</p>
-            <Button
-              variant="outline"
-              className="bg-white/5 border-white/10 hover:bg-white/10 rounded-xl text-white"
-              onClick={() => setActiveFilter('all')}
-            >
-              Show all projects
-          </Button>
-        </div>
+          <div className="glass-morphism border border-white/10 rounded-3xl p-6 sm:p-12 text-center">
+            <h3 className="text-2xl sm:text-3xl font-tech text-white mb-4">
+              No Projects Found
+            </h3>
+            <p className="text-white/70 text-base sm:text-lg font-tech">
+              No projects match the selected filter. Try a different category.
+            </p>
+          </div>
         )}
       </div>
     </section>
